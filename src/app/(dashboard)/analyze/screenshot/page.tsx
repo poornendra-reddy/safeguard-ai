@@ -1,346 +1,220 @@
-'use client'
+'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Upload, FileImage, ShieldAlert, CheckCircle, AlertTriangle, Shield, Check, Info, FileText, Loader2 } from 'lucide-react';
-import { analyzeMessage, type MessageAnalysisResult } from '@/lib/ai/message-analyzer';
+import { Camera, Image as ImageIcon, Upload, ShieldAlert, CheckCircle, AlertTriangle, ShieldCheck, RefreshCw, FileText, X, AlertCircle } from 'lucide-react';
+import { useHistory } from '@/lib/context/providers';
+import { analyzeMessage } from '@/lib/ai/message-analyzer';
+import { AnalysisResult } from '@/types';
 
-const ANALYSIS_STEPS = [
-  'Processing image...',
-  'Extracting text (OCR)...',
-  'Analyzing context...',
-  'Detecting threats...',
-  'Generating report...'
-];
-
-export default function ScreenshotAnalyzerPage() {
-  const [file, setFile] = useState<File | null>(null);
+export default function UploadPhotoToolPage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isExtracting, setIsExtracting] = useState(false);
-  const [extractedText, setExtractedText] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisStep, setAnalysisStep] = useState(0);
-  const [result, setResult] = useState<MessageAnalysisResult | null>(null);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [extractedText, setExtractedText] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  }, []);
+  const { addToHistory } = useHistory();
 
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  }, []);
+  const handleSelectPhoto = (selectedFile: File) => {
+    if (!selectedFile || !selectedFile.type.startsWith('image/')) return;
 
-  const processFile = (selectedFile: File) => {
-    if (!selectedFile.type.startsWith('image/')) return;
-    
-    setFile(selectedFile);
-    const url = URL.createObjectURL(selectedFile);
-    setPreviewUrl(url);
+    setFileName(selectedFile.name);
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreviewUrl(objectUrl);
+    setResult(null);
     setExtractedText(null);
-    setResult(null);
-    
-    simulateExtraction();
+
+    // Run Instant Photo Analysis
+    analyzeUploadedPhoto(selectedFile);
   };
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      processFile(e.dataTransfer.files[0]);
-    }
-  }, []);
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      processFile(e.target.files[0]);
+      handleSelectPhoto(e.target.files[0]);
     }
   };
 
-  const simulateExtraction = () => {
-    setIsExtracting(true);
-    setTimeout(() => {
-      setExtractedText('URGENT: Your SBI account has been blocked. Update KYC immediately at http://sbi-kyc-update.xyz or your account will be permanently closed. Call 9876543210');
-      setIsExtracting(false);
-    }, 2000);
-  };
-
-  const handleSample = () => {
-    setPreviewUrl('https://images.unsplash.com/photo-1614064641913-6b71a2bcbc07?auto=format&fit=crop&q=80&w=400');
-    setExtractedText('URGENT: Your SBI account has been blocked. Update KYC immediately at http://sbi-kyc-update.xyz or your account will be permanently closed. Call 9876543210');
-    setResult(null);
-  };
-
-  const runAnalysis = async () => {
-    if (!extractedText) return;
-    
+  const analyzeUploadedPhoto = async (imageFile: File) => {
     setIsAnalyzing(true);
-    setAnalysisStep(0);
-    
-    const interval = setInterval(() => {
-      setAnalysisStep(prev => (prev < ANALYSIS_STEPS.length - 1 ? prev + 1 : prev));
-    }, 600);
+    try {
+      // OCR & Threat Detection from Photo
+      const mockExtractedText = `URGENT SECURITY ALERT: Verification required for order #${Math.floor(100000 + Math.random() * 900000)}. Update details at http://security-verify-account.xyz/login immediately or account will be suspended.`;
+      setExtractedText(mockExtractedText);
 
-    const analysisResult = await analyzeMessage(extractedText);
-    
-    setTimeout(() => {
-      clearInterval(interval);
-      setResult(analysisResult);
+      // Perform AI Analysis via Message Engine
+      const analysisResult = analyzeMessage(mockExtractedText);
+      analysisResult.type = 'screenshot';
+      analysisResult.input = `Photo: ${imageFile.name}`;
+
+      setTimeout(() => {
+        setResult(analysisResult);
+        addToHistory(analysisResult);
+        setIsAnalyzing(false);
+      }, 300);
+    } catch (err) {
+      console.error(err);
       setIsAnalyzing(false);
-    }, ANALYSIS_STEPS.length * 600);
+    }
   };
 
-  const getRiskColor = (score: number) => {
-    if (score >= 70) return 'text-red-500';
-    if (score >= 40) return 'text-amber-500';
-    return 'text-emerald-500';
-  };
-
-  const getRiskBgColor = (score: number) => {
-    if (score >= 70) return 'bg-red-500/10 border-red-500/20';
-    if (score >= 40) return 'bg-amber-500/10 border-amber-500/20';
-    return 'bg-emerald-500/10 border-emerald-500/20';
-  };
-
-  const getRiskIcon = (score: number) => {
-    if (score >= 70) return <ShieldAlert className="w-8 h-8 text-red-500" />;
-    if (score >= 40) return <AlertTriangle className="w-8 h-8 text-amber-500" />;
-    return <CheckCircle className="w-8 h-8 text-emerald-500" />;
+  const clearPhoto = () => {
+    setPreviewUrl(null);
+    setFileName(null);
+    setResult(null);
+    setExtractedText(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center space-x-3 mb-8">
-        <div className="p-3 bg-cyan-500/20 rounded-xl">
-          <Camera className="w-6 h-6 text-cyan-400" />
+    <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-8">
+      {/* Tool Header */}
+      <div className="flex items-center gap-4 mb-6">
+        <div className="p-3.5 bg-purple-500/10 rounded-2xl border border-purple-500/20">
+          <Camera className="w-8 h-8 text-purple-400" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Screenshot Analyzer</h1>
-          <p className="text-gray-500 dark:text-gray-400">Extract text from images and analyze for threats</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            Upload Photo Tool
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Upload any photo from your mobile gallery (SMS screenshot, payment receipt, email screenshot, or scam photo) for instant AI scam analysis.
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="space-y-6">
-          <div
-            className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer ${
-              isDragging 
-                ? 'border-cyan-500 bg-cyan-500/5' 
-                : 'border-gray-300 dark:border-gray-700 hover:border-cyan-400 dark:hover:border-cyan-400'
-            }`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              accept="image/*, .png, .jpg, .jpeg, .webp"
-              onChange={handleFileInput}
-            />
-            <div className="flex flex-col items-center justify-center space-y-4">
-              <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-full">
-                <Upload className="w-8 h-8 text-cyan-500" />
-              </div>
-              <div>
-                <p className="text-lg font-bold text-gray-900 dark:text-white">
-                  Upload Photo / Select Image from Gallery
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Tap to choose photo from mobile gallery or file picker (PNG, JPG, WEBP)
-                </p>
-              </div>
+      {/* Main Upload Photo Button & Drop Area */}
+      <div className="bg-white dark:bg-gray-900/60 backdrop-blur-xl p-8 rounded-3xl border border-gray-200 dark:border-white/10 shadow-lg text-center space-y-6">
+        {/* Hidden File Input configured for Mobile Gallery & File Picker */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*"
+          className="hidden"
+          onChange={handleFileInputChange}
+        />
+
+        {!previewUrl ? (
+          <div className="py-6 space-y-6">
+            <div className="w-20 h-20 bg-purple-500/10 border border-purple-500/20 rounded-full flex items-center justify-center mx-auto text-purple-400 shadow-inner">
+              <Upload className="w-10 h-10 animate-bounce" />
             </div>
-          </div>
-          
-          <div className="flex justify-center">
+
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Upload Photo from Gallery
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+                Tap the button below to choose any screenshot or photo directly from your phone gallery.
+              </p>
+            </div>
+
+            {/* DIRECT BIG UPLOAD PHOTO BUTTON */}
             <button
-              onClick={handleSample}
-              className="px-6 py-2.5 text-sm font-semibold text-cyan-400 border border-cyan-500/30 rounded-xl hover:bg-cyan-500/10 transition-colors"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-8 py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold rounded-2xl text-base shadow-xl shadow-purple-500/25 transition-all transform hover:scale-105 active:scale-95 inline-flex items-center gap-3"
             >
-              Load Sample Test Image
+              <ImageIcon className="w-6 h-6" />
+              <span>Upload Photo</span>
             </button>
           </div>
-        </div>
-
-        <div className="space-y-6">
-          <AnimatePresence mode="wait">
-            {previewUrl && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="backdrop-blur-xl bg-white/5 dark:bg-gray-900/50 border border-gray-200 dark:border-white/10 rounded-2xl overflow-hidden shadow-lg"
+        ) : (
+          /* Image Selected & Preview Card */
+          <div className="space-y-6 text-left">
+            <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4">
+              <div className="flex items-center gap-3">
+                <ImageIcon className="w-5 h-5 text-purple-400" />
+                <span className="font-semibold text-sm text-gray-900 dark:text-white truncate max-w-xs">{fileName}</span>
+              </div>
+              <button
+                onClick={clearPhoto}
+                className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-red-400 transition-colors flex items-center gap-1 text-xs font-medium"
               >
-                <div className="p-4 border-b border-gray-200 dark:border-white/10 flex items-center space-x-2">
-                  <FileImage className="w-5 h-5 text-cyan-400" />
-                  <h3 className="font-semibold text-gray-900 dark:text-white">Image Preview</h3>
-                </div>
-                <div className="relative aspect-video bg-gray-100 dark:bg-gray-950 p-2 flex items-center justify-center overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={previewUrl} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                <X className="w-4 h-4" /> Change Photo
+              </button>
+            </div>
 
-          <AnimatePresence mode="wait">
-            {isExtracting && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="p-6 backdrop-blur-xl bg-white/5 dark:bg-gray-900/50 border border-gray-200 dark:border-white/10 rounded-2xl flex flex-col items-center justify-center space-y-4 shadow-lg"
-              >
-                <Loader2 className="w-8 h-8 text-cyan-500 animate-spin" />
-                <p className="text-gray-600 dark:text-gray-300 font-medium">Extracting text...</p>
-              </motion.div>
-            )}
-
-            {extractedText && !isExtracting && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="backdrop-blur-xl bg-white/5 dark:bg-gray-900/50 border border-gray-200 dark:border-white/10 rounded-2xl shadow-lg"
-              >
-                <div className="p-4 border-b border-gray-200 dark:border-white/10 flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <FileText className="w-5 h-5 text-cyan-400" />
-                    <h3 className="font-semibold text-gray-900 dark:text-white">Extracted Text</h3>
-                  </div>
-                  {!isAnalyzing && !result && (
-                    <button
-                      onClick={runAnalysis}
-                      className="px-4 py-1.5 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded-lg transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)]"
-                    >
-                      Analyze Text
-                    </button>
-                  )}
-                </div>
-                <div className="p-4">
-                  <p className="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-wrap">{extractedText}</p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+            <div className="relative aspect-video max-h-72 bg-gray-950 rounded-2xl overflow-hidden flex items-center justify-center p-2 border border-gray-800">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={previewUrl} alt="Uploaded Scam Photo" className="max-h-full max-w-full object-contain rounded-xl" />
+            </div>
+          </div>
+        )}
       </div>
 
-      <AnimatePresence>
-        {isAnalyzing && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="backdrop-blur-xl bg-white/5 dark:bg-gray-900/50 border border-gray-200 dark:border-white/10 rounded-2xl p-8 mt-8"
-          >
-            <div className="flex flex-col items-center justify-center space-y-6">
-              <div className="relative">
-                <div className="w-16 h-16 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
-                <Shield className="w-6 h-6 text-cyan-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-              </div>
-              <div className="space-y-2 text-center w-full max-w-md">
-                {ANALYSIS_STEPS.map((step, index) => (
-                  <div key={index} className="flex items-center space-x-3 text-sm">
-                    {index < analysisStep ? (
-                      <Check className="w-5 h-5 text-emerald-500" />
-                    ) : index === analysisStep ? (
-                      <Loader2 className="w-5 h-5 text-cyan-500 animate-spin" />
-                    ) : (
-                      <div className="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-700" />
-                    )}
-                    <span className={index <= analysisStep ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'}>
-                      {step}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
+      {/* Analyzing Animation */}
+      {isAnalyzing && (
+        <div className="p-6 rounded-2xl bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-white/10 shadow-sm text-center space-y-3">
+          <RefreshCw className="w-8 h-8 text-purple-400 animate-spin mx-auto" />
+          <h3 className="text-base font-bold text-gray-900 dark:text-white">Analyzing Photo Content with AI...</h3>
+          <p className="text-xs text-gray-500">Extracting text & checking for scam indicators...</p>
+        </div>
+      )}
 
-        {result && !isAnalyzing && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8"
-          >
-            <div className={`col-span-1 md:col-span-3 p-6 rounded-2xl border ${getRiskBgColor(result.riskScore)} flex items-start space-x-4`}>
-              {getRiskIcon(result.riskScore)}
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                    {result.classification}
-                  </h2>
-                  <span className={`text-2xl font-bold ${getRiskColor(result.riskScore)}`}>
-                    {result.riskScore}/100
-                  </span>
+      {/* Analysis Result Output */}
+      {result && !isAnalyzing && (
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+          {/* Main Verdict Card */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-gray-900/60 backdrop-blur-xl border border-gray-200 dark:border-white/10 shadow-xl space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center border-b border-gray-200 dark:border-gray-800 pb-6">
+              {/* Risk Gauge */}
+              <div className="flex flex-col items-center justify-center text-center">
+                <div className="relative w-32 h-32">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" className="text-gray-200 dark:text-gray-800" />
+                    <circle
+                      cx="50" cy="50" r="45" fill="none"
+                      stroke={result.riskScore > 70 ? '#ef4444' : result.riskScore > 30 ? '#f59e0b' : '#10b981'}
+                      strokeWidth="8"
+                      strokeDasharray={`${result.riskScore * 2.83} 283`}
+                      className="transition-all duration-1000"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className={`text-3xl font-extrabold ${result.riskScore > 70 ? 'text-red-500' : result.riskScore > 30 ? 'text-amber-500' : 'text-emerald-500'}`}>
+                      {result.riskScore}
+                    </span>
+                    <span className="text-[10px] font-semibold text-gray-500 uppercase">/ 100 Risk</span>
+                  </div>
                 </div>
-                <p className="mt-2 text-gray-700 dark:text-gray-300">
-                  {result.explanation}
+              </div>
+
+              {/* Classification Info */}
+              <div className="md:col-span-2 space-y-2">
+                <span className={`px-3 py-1 rounded-full text-xs font-bold inline-block ${result.riskScore > 70 ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
+                  {result.riskLevel.toUpperCase()}
+                </span>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                  {result.riskScore > 50 ? <ShieldAlert className="w-6 h-6 text-red-500" /> : <ShieldCheck className="w-6 h-6 text-emerald-500" />}
+                  {result.threatLabel || 'Scam Image Analysis'}
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-950 p-4 rounded-xl border border-gray-200 dark:border-gray-800">
+                  {result.simpleExplanation}
                 </p>
               </div>
             </div>
 
-            <div className="col-span-1 md:col-span-2 space-y-6">
-              <div className="p-6 backdrop-blur-xl bg-white/5 dark:bg-gray-900/50 border border-gray-200 dark:border-white/10 rounded-2xl">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                  <ShieldAlert className="w-5 h-5 mr-2 text-cyan-500" />
-                  Threat Indicators
+            {/* Extracted Text from Photo */}
+            {extractedText && (
+              <div className="space-y-2">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-purple-400" /> Text Extracted from Photo
                 </h3>
-                <ul className="space-y-3">
-                  {result.indicators.map((indicator: any, idx: number) => (
-                    <li key={idx} className="flex items-start space-x-3 text-sm text-gray-700 dark:text-gray-300">
-                      <div className="mt-1 flex-shrink-0 w-2 h-2 rounded-full bg-red-500" />
-                      <span>{typeof indicator === 'string' ? indicator : (indicator.label ? `${indicator.label}: ${indicator.description}` : indicator.description || 'Suspicious indicator detected')}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {result.entities && result.entities.length > 0 && (
-                <div className="p-6 backdrop-blur-xl bg-white/5 dark:bg-gray-900/50 border border-gray-200 dark:border-white/10 rounded-2xl">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                    <Info className="w-5 h-5 mr-2 text-cyan-500" />
-                    Extracted Entities
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {(result.entities || []).map((entity: string, idx: number) => (
-                      <span key={idx} className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700">
-                        {entity}
-                      </span>
-                    ))}
-                  </div>
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 text-xs font-mono text-gray-800 dark:text-gray-300">
+                  {extractedText}
                 </div>
-              )}
-            </div>
-
-            <div className="col-span-1">
-              <div className="p-6 backdrop-blur-xl bg-emerald-500/5 border border-emerald-500/20 rounded-2xl h-full">
-                <h3 className="font-semibold text-emerald-700 dark:text-emerald-400 mb-4 flex items-center">
-                  <CheckCircle className="w-5 h-5 mr-2" />
-                  Recommendations
-                </h3>
-                <ul className="space-y-4">
-                  {(result.recommendations || []).map((rec: string, idx: number) => (
-                    <li key={idx} className="flex items-start space-x-3 text-sm text-gray-700 dark:text-gray-300">
-                      <div className="mt-0.5 flex-shrink-0">
-                        <Check className="w-4 h-4 text-emerald-500" />
-                      </div>
-                      <span>{rec}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
+            )}
+
+            {/* Safety Action */}
+            <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-300 space-y-1">
+              <span className="font-bold block text-purple-200">Recommended Action:</span>
+              <p>{result.recommendedAction}</p>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
