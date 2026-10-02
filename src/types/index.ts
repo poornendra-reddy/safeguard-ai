@@ -22,7 +22,7 @@ export type ThreatCategory =
   | 'qr-scam'
   | 'safe';
 
-export type AnalysisType = 'url' | 'message' | 'email' | 'screenshot' | 'qr' | 'website';
+export type AnalysisType = 'url' | 'message' | 'email' | 'screenshot' | 'qr' | 'website' | 'call';
 
 export interface AnalysisResult {
   id: string;

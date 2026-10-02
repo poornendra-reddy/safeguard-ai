@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   Shield, Link as LinkIcon, MessageSquare, ShieldCheck, AlertTriangle, Award,
-  Mail, Camera, QrCode, Globe, AlertCircle, CheckCircle2, ChevronRight, Zap,
+  Mail, Camera, QrCode, Globe, PhoneOff, AlertCircle, CheckCircle2, ChevronRight, Zap,
   Activity, ArrowUpRight, PlusCircle, Search, FileText
 } from 'lucide-react';
 import {
@@ -19,6 +19,7 @@ const QUICK_ACTIONS = [
   { title: 'Check URL', subtitle: 'Analyze suspicious links', icon: LinkIcon, href: '/analyze/url', color: 'text-cyan-400', bg: 'bg-cyan-500/10 border-cyan-500/20' },
   { title: 'Analyze Message', subtitle: 'Scan text for threats', icon: MessageSquare, href: '/analyze/message', color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
   { title: 'Analyze Email', subtitle: 'Check email headers & links', icon: Mail, href: '/analyze/email', color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
+  { title: 'Spam Call Check', subtitle: 'Detect robocalls & vishing', icon: PhoneOff, href: '/analyze/call', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' },
   { title: 'Upload Screenshot', subtitle: 'Extract & scan image text', icon: Camera, href: '/analyze/screenshot', color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
   { title: 'Check QR Code', subtitle: 'Scan hidden destination URLs', icon: QrCode, href: '/analyze/qr', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
   { title: 'Check Website', subtitle: 'Deep domain & SSL scan', icon: Globe, href: '/analyze/website', color: 'text-indigo-400', bg: 'bg-indigo-500/10 border-indigo-500/20' },

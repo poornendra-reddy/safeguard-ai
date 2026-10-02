@@ -14,6 +14,7 @@ import {
   Camera,
   QrCode,
   Globe,
+  PhoneOff,
   History,
   Bot,
   GraduationCap,
@@ -43,6 +44,7 @@ const navGroups = [
       { name: 'Screenshot', href: '/analyze/screenshot', icon: Camera },
       { name: 'QR Scanner', href: '/analyze/qr', icon: QrCode },
       { name: 'Website Check', href: '/analyze/website', icon: Globe },
+      { name: 'Spam Call Check', href: '/analyze/call', icon: PhoneOff },
     ]
   },
   {
