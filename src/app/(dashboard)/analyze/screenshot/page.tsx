@@ -69,7 +69,7 @@ export default function ScreenshotAnalyzerPage() {
     }, 2000);
   };
 
-  const handleDemo = () => {
+  const handleSample = () => {
     setPreviewUrl('https://images.unsplash.com/photo-1614064641913-6b71a2bcbc07?auto=format&fit=crop&q=80&w=400');
     setExtractedText('URGENT: Your SBI account has been blocked. Update KYC immediately at http://sbi-kyc-update.xyz or your account will be permanently closed. Call 9876543210');
     setResult(null);
@@ -141,7 +141,7 @@ export default function ScreenshotAnalyzerPage() {
               type="file"
               ref={fileInputRef}
               className="hidden"
-              accept=".png,.jpg,.jpeg,.webp"
+              accept="image/*, .png, .jpg, .jpeg, .webp"
               onChange={handleFileInput}
             />
             <div className="flex flex-col items-center justify-center space-y-4">
@@ -149,11 +149,11 @@ export default function ScreenshotAnalyzerPage() {
                 <Upload className="w-8 h-8 text-cyan-500" />
               </div>
               <div>
-                <p className="text-lg font-medium text-gray-900 dark:text-white">
-                  Click to upload or drag and drop
+                <p className="text-lg font-bold text-gray-900 dark:text-white">
+                  Upload Photo / Select Image from Gallery
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  PNG, JPG, JPEG, WEBP (Max 10MB)
+                  Tap to choose photo from mobile gallery or file picker (PNG, JPG, WEBP)
                 </p>
               </div>
             </div>
@@ -161,10 +161,10 @@ export default function ScreenshotAnalyzerPage() {
           
           <div className="flex justify-center">
             <button
-              onClick={handleDemo}
-              className="px-6 py-2 text-sm font-medium text-cyan-500 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/10 transition-colors"
+              onClick={handleSample}
+              className="px-6 py-2.5 text-sm font-semibold text-cyan-400 border border-cyan-500/30 rounded-xl hover:bg-cyan-500/10 transition-colors"
             >
-              Try Demo Image
+              Load Sample Test Image
             </button>
           </div>
         </div>

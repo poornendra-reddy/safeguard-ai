@@ -157,7 +157,7 @@ export default function MessageAnalyzerPage() {
 
         {/* Demo Scenarios */}
         <div>
-          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Try a demo scenario</p>
+          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Quick Test Scenarios</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {demoMessages.map((demo: any, i: number) => (
               <div 

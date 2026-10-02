@@ -207,7 +207,7 @@ export default function QRCodeAnalyzerPage() {
                 onClick={handleDemo}
                 className="px-6 py-2 text-sm font-medium text-cyan-500 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/10 transition-colors"
               >
-                Try Demo QR
+                Load Sample QR
               </button>
             </div>
           </div>

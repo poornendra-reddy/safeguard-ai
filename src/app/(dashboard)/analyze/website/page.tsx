@@ -116,7 +116,7 @@ export default function WebsiteSafetyCheckerPage() {
               disabled={isAnalyzing}
               className="px-4 py-3 text-cyan-500 bg-cyan-500/10 border border-cyan-500/30 rounded-xl hover:bg-cyan-500/20 transition-colors"
             >
-              Try Demo
+              Load Sample Website
             </button>
           </div>
         </form>

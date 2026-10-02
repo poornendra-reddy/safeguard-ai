@@ -189,7 +189,7 @@ export default function EmailAnalyzerPage() {
             disabled={isAnalyzing}
             className="text-cyan-500 hover:text-cyan-400 text-sm font-medium"
           >
-            Load Demo Scam Email
+            Load Sample Scam Email
           </button>
         </div>
       </motion.div>

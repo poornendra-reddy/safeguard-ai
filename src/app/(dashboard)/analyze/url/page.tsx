@@ -147,7 +147,7 @@ export default function UrlAnalyzerPage() {
               disabled={isAnalyzing}
               className="text-cyan-500 hover:text-cyan-400 text-sm font-medium flex items-center gap-1"
             >
-              Try Demo <ArrowUpRight className="w-4 h-4" />
+              Load Sample URL <ArrowUpRight className="w-4 h-4" />
             </button>
           </div>
         </div>
