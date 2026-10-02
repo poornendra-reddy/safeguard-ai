@@ -1,0 +1,68 @@
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Home, ShieldAlert, History, BookOpen, User } from 'lucide-react';
+import Sidebar from '@/components/layout/Sidebar';
+import Topbar from '@/components/layout/Topbar';
+
+const BOTTOM_NAV_ITEMS = [
+  { name: 'Home', href: '/dashboard', icon: Home },
+  { name: 'Analyze', href: '/analyze/url', icon: ShieldAlert },
+  { name: 'History', href: '/history', icon: History },
+  { name: 'Learn', href: '/learn', icon: BookOpen },
+  { name: 'Profile', href: '/settings', icon: User },
+];
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col md:flex-row">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Desktop & Mobile Sidebar */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <Sidebar onClose={() => setSidebarOpen(false)} />
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen w-full lg:ml-72 pb-16 md:pb-0">
+        <Topbar onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto">
+          {children}
+        </main>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around p-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 md:hidden">
+        {BOTTOM_NAV_ITEMS.map((item) => {
+          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`flex flex-col items-center justify-center w-full space-y-1 ${isActive ? 'text-cyan-500' : 'text-gray-500 dark:text-gray-400 hover:text-cyan-400'}`}
+            >
+              <Icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[10px] font-medium">{item.name}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
+  );
+}

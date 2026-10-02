@@ -33,11 +33,18 @@ export interface AnalysisResult {
   riskLevel: RiskLevel;
   threatCategory: ThreatCategory;
   threatLabel: string;
-  indicators: ThreatIndicator[];
+  indicators: any[];
   technicalExplanation: string;
   simpleExplanation: string;
   recommendedAction: string;
-  details: Record<string, unknown>;
+  details: Record<string, any>;
+  classification?: string;
+  explanation?: string;
+  recommendation?: string;
+  recommendations: string[];
+  entities: string[];
+  domain?: string;
+  url?: string;
 }
 
 export interface ThreatIndicator {
@@ -94,6 +101,7 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
+  bio?: string;
   securityScore: number;
   joinDate: string;
   language: 'en' | 'te' | 'hi';
@@ -144,12 +152,16 @@ export interface EducationTopic {
   title: string;
   icon: string;
   description: string;
+  category?: string;
   content: {
     explanation: string;
     realWorldExample: string;
     warningSigns: string[];
     doList: string[];
     dontList: string[];
+    dos?: string[];
+    donts?: string[];
+    example?: string;
   };
 }
 
