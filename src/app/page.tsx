@@ -305,12 +305,12 @@ function HowItWorksSection() {
 
 function FeaturesSection() {
   const features = [
-    { title: "URL Scanner", desc: "Analyze links for phishing, malware distribution, and domain reputation before clicking.", icon: <Globe className="w-6 h-6" /> },
-    { title: "Message Analyzer", desc: "Detect smishing (SMS phishing) and social engineering in text messages and DMs.", icon: <MessageSquare className="w-6 h-6" /> },
-    { title: "Email Checker", desc: "Extract and verify email headers, sender domains, and typical phishing language.", icon: <Mail className="w-6 h-6" /> },
-    { title: "Screenshot OCR", desc: "Extract text from screenshots of suspicious messages or emails for AI analysis.", icon: <Search className="w-6 h-6" /> },
-    { title: "QR Code Detector", desc: "Safely decode and analyze embedded URLs in QR codes without opening them.", icon: <QrCode className="w-6 h-6" /> },
-    { title: "Website Safety", desc: "Real-time assessment of website content and structure to detect impersonation.", icon: <Shield className="w-6 h-6" /> }
+    { title: "URL Scanner", desc: "Analyze links for phishing, malware distribution, and domain reputation before clicking.", icon: <Globe className="w-6 h-6" />, href: "/analyze/url" },
+    { title: "Message Analyzer", desc: "Detect smishing (SMS phishing) and social engineering in text messages and DMs.", icon: <MessageSquare className="w-6 h-6" />, href: "/analyze/message" },
+    { title: "Email Checker", desc: "Extract and verify email headers, sender domains, and typical phishing language.", icon: <Mail className="w-6 h-6" />, href: "/analyze/email" },
+    { title: "Screenshot OCR", desc: "Extract text from screenshots of suspicious messages or emails for AI analysis.", icon: <Search className="w-6 h-6" />, href: "/analyze/screenshot" },
+    { title: "QR Code Detector", desc: "Safely decode and analyze embedded URLs in QR codes without opening them.", icon: <QrCode className="w-6 h-6" />, href: "/analyze/qr" },
+    { title: "Website Safety", desc: "Real-time assessment of website content and structure to detect impersonation.", icon: <Shield className="w-6 h-6" />, href: "/analyze/website" }
   ];
 
   return (
@@ -318,25 +318,35 @@ function FeaturesSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Comprehensive Protection</h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">A unified suite of tools designed to detect threats across all your digital touchpoints.</p>
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Click any tool below to launch instant AI-powered threat analysis.</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, idx) => (
-            <motion.div 
-              key={idx}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="p-6 rounded-2xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-gray-800/50 hover:border-cyan-500/50 transition-all hover:shadow-[0_0_15px_rgba(6,182,212,0.1)] group"
-            >
-              <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 mb-4 group-hover:bg-cyan-500/20 group-hover:text-cyan-500 transition-colors">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{feature.desc}</p>
-            </motion.div>
+            <Link key={idx} href={feature.href} className="block">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -5 }}
+                className="p-6 rounded-2xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-gray-800/50 hover:border-cyan-500 transition-all hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] group cursor-pointer h-full flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 mb-4 group-hover:bg-cyan-500 group-hover:text-white transition-all shadow-sm">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-cyan-400 transition-colors flex items-center justify-between">
+                    {feature.title}
+                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400" />
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">{feature.desc}</p>
+                </div>
+                <div className="text-xs font-semibold text-cyan-500 group-hover:text-cyan-400 flex items-center gap-1">
+                  Launch Scanner <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </div>
