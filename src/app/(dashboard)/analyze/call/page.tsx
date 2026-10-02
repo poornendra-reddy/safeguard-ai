@@ -133,28 +133,7 @@ export default function SpamCallDetectorPage() {
         </div>
       </div>
 
-      {/* Demo Quick Selectors */}
-      <section className="bg-white dark:bg-gray-900/60 backdrop-blur-xl p-5 rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm">
-        <h2 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-          Quick Demo Scenarios (Click to test)
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {DEMO_CALLS.map((demo, idx) => (
-            <button
-              key={idx}
-              onClick={() => loadDemo(demo)}
-              className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 hover:bg-red-500/10 dark:hover:bg-red-500/10 border border-gray-200 dark:border-gray-700/60 hover:border-red-500/40 text-left transition-all group"
-            >
-              <div className="font-semibold text-xs text-gray-900 dark:text-white group-hover:text-red-400 flex items-center justify-between">
-                {demo.title}
-                <PhoneCall className="w-3.5 h-3.5 text-gray-400 group-hover:text-red-400" />
-              </div>
-              <div className="text-[11px] font-mono text-cyan-400 mt-1">{demo.phone}</div>
-              <div className="text-[10px] text-gray-500 dark:text-gray-400 truncate mt-0.5">{demo.desc}</div>
-            </button>
-          ))}
-        </div>
-      </section>
+
 
       {/* Input Form Card */}
       <section className="bg-white dark:bg-gray-900/60 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm space-y-6">

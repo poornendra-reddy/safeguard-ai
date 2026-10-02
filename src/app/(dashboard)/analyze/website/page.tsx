@@ -109,15 +109,6 @@ export default function WebsiteSafetyCheckerPage() {
               ) : (
                 'Check Website'
               )}
-            </button>
-            <button
-              type="button"
-              onClick={handleDemo}
-              disabled={isAnalyzing}
-              className="px-4 py-3 text-cyan-500 bg-cyan-500/10 border border-cyan-500/30 rounded-xl hover:bg-cyan-500/20 transition-colors"
-            >
-              Load Sample Website
-            </button>
           </div>
         </form>
       </div>

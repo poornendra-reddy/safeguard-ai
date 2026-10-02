@@ -155,24 +155,7 @@ export default function MessageAnalyzerPage() {
           </div>
         </div>
 
-        {/* Demo Scenarios */}
-        <div>
-          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Quick Test Scenarios</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {demoMessages.map((demo: any, i: number) => (
-              <div 
-                key={i} 
-                onClick={() => handleDemo(demo.content)}
-                className="cursor-pointer text-sm p-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 hover:border-cyan-500/50 hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors group"
-              >
-                <div className="font-medium text-gray-900 dark:text-gray-200 mb-1 flex justify-between items-center">
-                  {demo.title} <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 text-cyan-500 transition-opacity" />
-                </div>
-                <div className="text-gray-500 dark:text-gray-400 truncate">{demo.content}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         <div className="flex flex-wrap gap-4 pt-2">
           <button

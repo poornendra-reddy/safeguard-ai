@@ -142,14 +142,6 @@ export default function UrlAnalyzerPage() {
                 Clear
               </button>
             </div>
-            <button
-              onClick={handleDemo}
-              disabled={isAnalyzing}
-              className="text-cyan-500 hover:text-cyan-400 text-sm font-medium flex items-center gap-1"
-            >
-              Load Sample URL <ArrowUpRight className="w-4 h-4" />
-            </button>
-          </div>
         </div>
       </motion.div>
 

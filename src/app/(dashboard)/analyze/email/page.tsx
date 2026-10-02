@@ -184,13 +184,6 @@ export default function EmailAnalyzerPage() {
               Clear
             </button>
           </div>
-          <button
-            onClick={handleDemo}
-            disabled={isAnalyzing}
-            className="text-cyan-500 hover:text-cyan-400 text-sm font-medium"
-          >
-            Load Sample Scam Email
-          </button>
         </div>
       </motion.div>
 
