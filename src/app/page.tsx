@@ -108,9 +108,6 @@ export default function LandingPage() {
       {/* Supported Threats */}
       <ThreatsSection />
 
-      {/* Stats */}
-      <StatsSection />
-
       {/* Why Us */}
       <WhyUsSection />
 
@@ -371,55 +368,7 @@ function ThreatsSection() {
   );
 }
 
-function StatsSection() {
-  const [stats, setStats] = useState({ urls: 0, threats: 0, accuracy: 0, users: 0 });
 
-  useEffect(() => {
-    let frame = 0;
-    const maxFrames = 60;
-    const interval = setInterval(() => {
-      frame++;
-      const progress = frame / maxFrames;
-      const easeOutQuad = 1 - (1 - progress) * (1 - progress);
-      
-      setStats({
-        urls: Math.floor(easeOutQuad * 50000),
-        threats: Math.floor(easeOutQuad * 15000),
-        accuracy: Number((easeOutQuad * 98.5).toFixed(1)),
-        users: Math.floor(easeOutQuad * 10000)
-      });
-
-      if (frame >= maxFrames) clearInterval(interval);
-    }, 30);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-cyan-600 dark:bg-cyan-900/20"></div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div className="p-4">
-            <div className="text-4xl md:text-5xl font-bold text-white mb-2">{stats.urls.toLocaleString()}+</div>
-            <div className="text-cyan-100 font-medium">URLs Analyzed</div>
-          </div>
-          <div className="p-4">
-            <div className="text-4xl md:text-5xl font-bold text-white mb-2">{stats.threats.toLocaleString()}+</div>
-            <div className="text-cyan-100 font-medium">Threats Detected</div>
-          </div>
-          <div className="p-4">
-            <div className="text-4xl md:text-5xl font-bold text-white mb-2">{stats.accuracy}%</div>
-            <div className="text-cyan-100 font-medium">Detection Accuracy</div>
-          </div>
-          <div className="p-4">
-            <div className="text-4xl md:text-5xl font-bold text-white mb-2">{stats.users.toLocaleString()}+</div>
-            <div className="text-cyan-100 font-medium">Users Protected</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function WhyUsSection() {
   const usps = [
