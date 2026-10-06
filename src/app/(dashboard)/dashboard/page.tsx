@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import {
   Shield, Link as LinkIcon, MessageSquare, ShieldCheck, AlertTriangle, Award,
   Mail, Camera, QrCode, Globe, PhoneOff, AlertCircle, CheckCircle2, ChevronRight, Zap,
-  Activity, ArrowUpRight, PlusCircle, Search, FileText
+  Activity, ArrowUpRight, PlusCircle, Search, FileText, Key, FileX, Lock, ShieldAlert, Wifi, Eye, ShieldOff, MessageSquareX
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
@@ -23,6 +23,14 @@ const QUICK_ACTIONS = [
   { title: 'Upload Screenshot', subtitle: 'Extract & scan image text', icon: Camera, href: '/analyze/screenshot', color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
   { title: 'Check QR Code', subtitle: 'Scan hidden destination URLs', icon: QrCode, href: '/analyze/qr', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
   { title: 'Check Website', subtitle: 'Deep domain & SSL scan', icon: Globe, href: '/analyze/website', color: 'text-indigo-400', bg: 'bg-indigo-500/10 border-indigo-500/20' },
+  { title: 'Password Checker', subtitle: 'Test password security', icon: Key, href: '/analyze/password', color: 'text-yellow-400', bg: 'bg-yellow-500/10 border-yellow-500/20' },
+  { title: 'Malicious File Check', subtitle: 'Scan file attachments', icon: FileX, href: '/analyze/file', color: 'text-rose-400', bg: 'bg-rose-500/10 border-rose-500/20' },
+  { title: 'Secure File Share', subtitle: 'Share files with encryption', icon: Lock, href: '/analyze/share', color: 'text-teal-400', bg: 'bg-teal-500/10 border-teal-500/20' },
+  { title: 'Browser Permissions', subtitle: 'Analyze extension risks', icon: ShieldAlert, href: '/analyze/browser', color: 'text-orange-400', bg: 'bg-orange-500/10 border-orange-500/20' },
+  { title: 'Public Wi-Fi Risk', subtitle: 'Check network security', icon: Wifi, href: '/analyze/network', color: 'text-cyan-400', bg: 'bg-cyan-500/10 border-cyan-500/20' },
+  { title: 'Deepfake Detector', subtitle: 'Analyze AI media manipulation', icon: Eye, href: '/analyze/deepfake', color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
+  { title: 'Ransomware Shield', subtitle: 'Monitor behavior patterns', icon: ShieldOff, href: '/analyze/ransomware', color: 'text-red-500', bg: 'bg-red-500/10 border-red-500/20' },
+  { title: 'Cyberbullying Check', subtitle: 'Detect toxic harassment', icon: MessageSquareX, href: '/analyze/cyberbullying', color: 'text-pink-400', bg: 'bg-pink-500/10 border-pink-500/20' },
 ];
 
 const TIPS = [

@@ -36,7 +36,7 @@ export default function WebsiteSafetyCheckerPage() {
       setAnalysisStep(prev => (prev < ANALYSIS_STEPS.length - 1 ? prev + 1 : prev));
     }, 600);
 
-    const analysisResult = await analyzeURL(targetUrl);
+    const analysisResult = analyzeURL(targetUrl);
     
     setTimeout(() => {
       clearInterval(interval);
@@ -109,6 +109,7 @@ export default function WebsiteSafetyCheckerPage() {
               ) : (
                 'Check Website'
               )}
+            </button>
           </div>
         </form>
       </div>

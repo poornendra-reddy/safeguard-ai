@@ -24,6 +24,13 @@ export const THREAT_CATEGORIES: Record<ThreatCategory, { label: string; icon: st
   malware: { label: 'Malware Link', icon: 'Bug', color: 'text-red-600', description: 'Links that download malicious software to your device.' },
   'credential-harvesting': { label: 'Credential Harvesting', icon: 'KeyRound', color: 'text-red-500', description: 'Attempts to collect usernames, passwords, and other credentials.' },
   'qr-scam': { label: 'QR Code Scam', icon: 'QrCode', color: 'text-orange-500', description: 'Malicious QR codes that redirect to phishing or scam websites.' },
+  'weak-password': { label: 'Weak Password', icon: 'Key', color: 'text-amber-500', description: 'Passwords with weak patterns susceptible to brute-force or dictionary attacks.' },
+  'malicious-file': { label: 'Malicious File', icon: 'FileX', color: 'text-red-600', description: 'Potentially dangerous executable or script file detected.' },
+  'risky-permission': { label: 'Risky Permission', icon: 'ShieldAlert', color: 'text-orange-500', description: 'Excessive browser permissions that could compromise privacy or data.' },
+  'unsecure-network': { label: 'Unsecure Wi-Fi', icon: 'WifiOff', color: 'text-amber-600', description: 'Public network missing encryption or exhibiting man-in-the-middle risks.' },
+  'deepfake-manipulation': { label: 'Deepfake Media', icon: 'Eye', color: 'text-purple-500', description: 'Media exhibiting indicators of synthetic or AI manipulation.' },
+  'ransomware-pattern': { label: 'Ransomware Behavior', icon: 'Lock', color: 'text-red-700', description: 'Rapid mass encryption or suspicious shadow copy deletion activity.' },
+  cyberbullying: { label: 'Cyberbullying & Harassment', icon: 'MessageSquareX', color: 'text-red-500', description: 'Toxic, threatening, or harassing text directed at individuals.' },
   safe: { label: 'Safe', icon: 'ShieldCheck', color: 'text-emerald-500', description: 'No threats detected.' },
 };
 

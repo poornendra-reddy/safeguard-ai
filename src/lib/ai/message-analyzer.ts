@@ -83,13 +83,13 @@ export function analyzeMessage(message: string, messageType: string = 'SMS'): An
 
   const detectedIndicators = indicators.filter(i => i.detected);
   const technicalExplanation = detectedIndicators.length > 0
-    ? `Analysis of the ${messageType} message identified ${detectedIndicators.length} suspicious indicators: ${detectedIndicators.map(i => i.label).join(', ')}. ${urgencyMatches.length > 0 ? `Urgency language detected (${urgencyMatches.join(', ')}).` : ''} ${rewardMatches.length > 0 ? `Fake reward/prize language detected.` : ''} ${personalInfoMatches.length > 0 ? `The message requests sensitive personal information.` : ''} ${urls.length > 0 ? `Contains ${urls.length} suspicious link(s).` : ''}`
+    ? `Analysis of the ${messageType} message identified ${detectedIndicators.length} suspicious indicators: ${detectedIndicators.map(i => i.label || i.description).join(', ')}. ${urgencyMatches.length > 0 ? `Urgency language detected (${urgencyMatches.join(', ')}).` : ''} ${rewardMatches.length > 0 ? `Fake reward/prize language detected.` : ''} ${personalInfoMatches.length > 0 ? `The message requests sensitive personal information.` : ''} ${urls.length > 0 ? `Contains ${urls.length} suspicious link(s).` : ''}`
     : `The ${messageType} message does not contain significant suspicious indicators.`;
 
   const simpleExplanation = score > 75
     ? `⚠️ This message is very likely a scam. ${rewardMatches.length > 0 ? 'It promises a fake reward or prize to trick you.' : ''} ${urgencyMatches.length > 0 ? 'It uses scary or urgent words to pressure you into acting quickly without thinking.' : ''} ${personalInfoMatches.length > 0 ? 'It asks for your personal information like passwords or OTPs, which no legitimate organization would do via message.' : ''} ${urls.length > 0 ? 'It contains a suspicious link that could steal your information.' : ''} Do NOT respond to this message.`
     : score > 50
-    ? `⚠️ This message has some suspicious elements. ${detectedIndicators.length > 0 ? `Warning signs include: ${detectedIndicators.map(i => i.label.toLowerCase()).join(', ')}.` : ''} Be cautious and don't click any links or share personal information.`
+    ? `⚠️ This message has some suspicious elements. ${detectedIndicators.length > 0 ? `Warning signs include: ${detectedIndicators.map(i => (i.label || i.description).toLowerCase()).join(', ')}.` : ''} Be cautious and don't click any links or share personal information.`
     : score > 20
     ? `This message has minor risk indicators. While it may be legitimate, always be careful with messages from unknown senders.`
     : `✅ This message appears safe. No significant scam indicators were detected.`;

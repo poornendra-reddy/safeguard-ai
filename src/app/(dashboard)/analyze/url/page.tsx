@@ -142,6 +142,7 @@ export default function UrlAnalyzerPage() {
                 Clear
               </button>
             </div>
+          </div>
         </div>
       </motion.div>
 

@@ -20,9 +20,31 @@ export type ThreatCategory =
   | 'malware'
   | 'credential-harvesting'
   | 'qr-scam'
+  | 'weak-password'
+  | 'malicious-file'
+  | 'risky-permission'
+  | 'unsecure-network'
+  | 'deepfake-manipulation'
+  | 'ransomware-pattern'
+  | 'cyberbullying'
   | 'safe';
 
-export type AnalysisType = 'url' | 'message' | 'email' | 'screenshot' | 'qr' | 'website' | 'call';
+export type AnalysisType = 
+  | 'url' 
+  | 'message' 
+  | 'email' 
+  | 'screenshot' 
+  | 'qr' 
+  | 'website' 
+  | 'call'
+  | 'password'
+  | 'file'
+  | 'share'
+  | 'browser'
+  | 'network'
+  | 'deepfake'
+  | 'ransomware'
+  | 'cyberbullying';
 
 export interface AnalysisResult {
   id: string;
@@ -49,10 +71,11 @@ export interface AnalysisResult {
 
 export interface ThreatIndicator {
   id: string;
-  label: string;
+  label?: string;
   description: string;
   severity: 'info' | 'warning' | 'danger';
-  detected: boolean;
+  detected?: boolean;
+  type?: string;
 }
 
 export interface URLAnalysisDetails {

@@ -23,7 +23,7 @@ export function analyzeCall(phoneNumber: string, transcriptOrClaim: string = '')
     indicators.push({
       id: 'call-ind-intl',
       type: 'pattern',
-      severity: 'high',
+      severity: 'danger',
       description: 'Incoming call from high-risk international country code known for telecommunication frauds & vishing scams.',
     });
   }
@@ -34,7 +34,7 @@ export function analyzeCall(phoneNumber: string, transcriptOrClaim: string = '')
     indicators.push({
       id: 'call-ind-telemarketer',
       type: 'pattern',
-      severity: 'medium',
+      severity: 'warning',
       description: 'Telemarketing / Robocall prefix detected (140-series or 1800 commercial toll-free series).',
     });
   }
@@ -55,7 +55,7 @@ export function analyzeCall(phoneNumber: string, transcriptOrClaim: string = '')
     indicators.push({
       id: 'call-ind-digital-arrest',
       type: 'keyword',
-      severity: 'critical',
+      severity: 'danger',
       description: `Detected Digital Arrest / Police Impersonation keywords: "${foundDigitalArrest.join(', ')}". Authorities NEVER place people under digital arrest over phone calls.`,
     });
   }
@@ -68,7 +68,7 @@ export function analyzeCall(phoneNumber: string, transcriptOrClaim: string = '')
     indicators.push({
       id: 'call-ind-sim-block',
       type: 'keyword',
-      severity: 'high',
+      severity: 'danger',
       description: `Detected SIM Block / TRAI threat keywords: "${foundSimBlock.join(', ')}". TRAI never calls individuals threatening SIM disconnection within hours.`,
     });
   }
@@ -81,7 +81,7 @@ export function analyzeCall(phoneNumber: string, transcriptOrClaim: string = '')
     indicators.push({
       id: 'call-ind-banking',
       type: 'keyword',
-      severity: 'critical',
+      severity: 'danger',
       description: `Detected Banking/OTP harvesting keywords: "${foundBanking.join(', ')}". Genuine bank staff will NEVER ask for your OTP, PIN, or CVV over a call.`,
     });
   }
@@ -94,7 +94,7 @@ export function analyzeCall(phoneNumber: string, transcriptOrClaim: string = '')
     indicators.push({
       id: 'call-ind-electricity',
       type: 'keyword',
-      severity: 'high',
+      severity: 'danger',
       description: `Detected Electricity Disconnection threats: "${foundElectricity.join(', ')}". Power companies do not disconnect services via instant phone threats.`,
     });
   }
@@ -105,7 +105,7 @@ export function analyzeCall(phoneNumber: string, transcriptOrClaim: string = '')
     indicators.push({
       id: 'call-ind-urgency',
       type: 'nlp',
-      severity: 'high',
+      severity: 'danger',
       description: 'Psychological urgency / intimidation tactics used to induce panic and compliance.',
     });
   }

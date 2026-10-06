@@ -111,13 +111,13 @@ export function analyzeURL(url: string): AnalysisResult {
   // Generate explanations
   const detectedIndicators = indicators.filter(i => i.detected);
   const technicalExplanation = detectedIndicators.length > 0
-    ? `Analysis of the URL "${url}" identified ${detectedIndicators.length} suspicious indicators: ${detectedIndicators.map(i => i.label).join(', ')}. The domain "${domain}" ${!isHttps ? 'does not use HTTPS encryption' : 'uses HTTPS'}, ${suspiciousTLD ? 'uses a TLD commonly associated with malicious sites' : 'uses a standard TLD'}, and ${typosquatting.detected ? `appears to impersonate the brand "${typosquatting.brand}"` : 'does not appear to impersonate any known brand'}.`
+    ? `Analysis of the URL "${url}" identified ${detectedIndicators.length} suspicious indicators: ${detectedIndicators.map(i => i.label || i.description).join(', ')}. The domain "${domain}" ${!isHttps ? 'does not use HTTPS encryption' : 'uses HTTPS'}, ${suspiciousTLD ? 'uses a TLD commonly associated with malicious sites' : 'uses a standard TLD'}, and ${typosquatting.detected ? `appears to impersonate the brand "${typosquatting.brand}"` : 'does not appear to impersonate any known brand'}.`
     : `Analysis of the URL "${url}" did not identify any significant suspicious indicators. The domain "${domain}" appears to be legitimate.`;
 
   const simpleExplanation = score > 75
     ? `⚠️ This website looks dangerous. ${typosquatting.detected ? `It's pretending to be ${typosquatting.brand} but it's NOT the real website.` : 'It has several signs that it could be a fake or scam website.'} ${!isHttps ? 'It doesn\'t even have basic security (no HTTPS).' : ''} Do NOT enter any personal information, passwords, or banking details on this site.`
     : score > 50
-    ? `⚠️ This website has some suspicious features. ${detectedIndicators.length > 0 ? `We found: ${detectedIndicators.map(i => i.label.toLowerCase()).join(', ')}.` : ''} Be cautious and verify the website's legitimacy before entering any information.`
+    ? `⚠️ This website has some suspicious features. ${detectedIndicators.length > 0 ? `We found: ${detectedIndicators.map(i => (i.label || i.description).toLowerCase()).join(', ')}.` : ''} Be cautious and verify the website's legitimacy before entering any information.`
     : score > 20
     ? `This website has minor risk indicators but appears relatively safe. Still, always verify you're on the correct website before entering sensitive information.`
     : `✅ This website appears safe. The URL structure and domain look legitimate. However, always stay vigilant while browsing.`;

@@ -25,7 +25,15 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  LogOut
+  LogOut,
+  Key,
+  FileX,
+  Lock,
+  ShieldAlert,
+  Wifi,
+  Eye,
+  ShieldOff,
+  MessageSquareX
 } from 'lucide-react';
 
 const navGroups = [
@@ -45,6 +53,14 @@ const navGroups = [
       { name: 'QR Scanner', href: '/analyze/qr', icon: QrCode },
       { name: 'Website Check', href: '/analyze/website', icon: Globe },
       { name: 'Spam Call Check', href: '/analyze/call', icon: PhoneOff },
+      { name: 'Password Security', href: '/analyze/password', icon: Key },
+      { name: 'Malicious File Check', href: '/analyze/file', icon: FileX },
+      { name: 'Secure File Share', href: '/analyze/share', icon: Lock },
+      { name: 'Browser Permissions', href: '/analyze/browser', icon: ShieldAlert },
+      { name: 'Public Wi-Fi Risk', href: '/analyze/network', icon: Wifi },
+      { name: 'Deepfake Detector', href: '/analyze/deepfake', icon: Eye },
+      { name: 'Ransomware Shield', href: '/analyze/ransomware', icon: ShieldOff },
+      { name: 'Cyberbullying Check', href: '/analyze/cyberbullying', icon: MessageSquareX },
     ]
   },
   {
