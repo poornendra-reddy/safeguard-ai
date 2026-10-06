@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider, AuthProvider, NotificationProvider, HistoryProvider } from '@/lib/context/providers';
+import DynamicBackground from '@/components/layout/DynamicBackground';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +23,10 @@ export default function RootLayout({
           <AuthProvider>
             <NotificationProvider>
               <HistoryProvider>
-                {children}
+                <DynamicBackground />
+                <div className="relative z-10 min-h-screen">
+                  {children}
+                </div>
               </HistoryProvider>
             </NotificationProvider>
           </AuthProvider>
