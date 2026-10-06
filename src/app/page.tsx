@@ -166,15 +166,13 @@ function HeroSection() {
         <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-cyan-500 opacity-20 blur-[100px]"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-          {/* Left: Text */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center lg:text-left"
-          >
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center"
+        >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-sm font-medium mb-6">
               <Activity className="w-4 h-4" />
               <span>Next-Gen Cybersecurity AI</span>
@@ -194,66 +192,6 @@ function HeroSection() {
               </a>
             </div>
           </motion.div>
-
-          {/* Right: Demo Card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mx-auto w-full max-w-md"
-          >
-            <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
-              
-              <div className="flex items-center gap-3 mb-6 bg-gray-100 dark:bg-gray-950 p-3 rounded-lg border border-gray-200 dark:border-gray-800">
-                <LinkIcon className="w-5 h-5 text-gray-500" />
-                <span className="text-sm font-mono truncate text-gray-600 dark:text-gray-400">https://example-security-check.com</span>
-              </div>
-
-              <div className="h-48 flex flex-col items-center justify-center">
-                <AnimatePresence mode="wait">
-                  {analysisState === 0 && (
-                    <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center">
-                      <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500 font-medium">Ready to analyze</p>
-                    </motion.div>
-                  )}
-                  {analysisState === 1 && (
-                    <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center w-full">
-                      <div className="relative w-24 h-24 mx-auto mb-4">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" className="text-gray-200 dark:text-gray-800" />
-                          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" strokeDasharray={`${progress * 2.83} 283`} className="text-cyan-500 transition-all duration-150" />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-lg font-bold">{progress}%</span>
-                        </div>
-                      </div>
-                      <p className="text-cyan-500 font-medium animate-pulse">Analyzing with AI...</p>
-                    </motion.div>
-                  )}
-                  {analysisState === 2 && (
-                    <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="text-center w-full">
-                      <div className="relative w-24 h-24 mx-auto mb-4">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" className="text-gray-200 dark:text-gray-800" />
-                          <circle cx="50" cy="50" r="45" fill="none" stroke="#ef4444" strokeWidth="8" strokeDasharray="246 283" className="transition-all duration-1000" />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-xl font-bold text-red-500">87<span className="text-xs text-gray-500">/100</span></span>
-                        </div>
-                      </div>
-                      <div className="inline-flex items-center gap-2 bg-red-500/10 text-red-500 px-3 py-1 rounded-full text-sm font-semibold mb-2">
-                        <AlertTriangle className="w-4 h-4" /> Potential Threat Detected
-                      </div>
-                      <p className="text-sm text-gray-500 font-medium">Classification: Phishing Website</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </motion.div>
-        </div>
       </div>
     </section>
   );
