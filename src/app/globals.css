@@ -133,3 +133,25 @@
   0% { background-position: -1000px 0; }
   100% { background-position: 1000px 0; }
 }
+
+@keyframes bubbleFall {
+  0% {
+    transform: translateY(-100px) scale(0.5);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(105vh) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.animate-bubble-fall {
+  animation: bubbleFall linear infinite;
+}
+

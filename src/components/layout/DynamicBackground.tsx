@@ -3,77 +3,86 @@
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-// Color themes array (Each item has 3 distinct complementary gradient colors)
-const COLOR_THEMES = [
-  // 1. Cybersecurity Cyber Cyan & Electric Purple & Emerald Teal
-  {
-    glow1: 'from-cyan-500/50 to-blue-600/50',
-    glow2: 'from-purple-600/50 to-pink-500/50',
-    glow3: 'from-emerald-500/40 to-teal-400/40',
-  },
-  // 2. Neon Emerald & Golden Amber & Crimson Red
-  {
-    glow1: 'from-emerald-500/50 to-teal-500/50',
-    glow2: 'from-amber-500/50 to-yellow-400/50',
-    glow3: 'from-red-500/40 to-rose-600/40',
-  },
-  // 3. Royal Indigo & Electric Blue & Bright Magenta
-  {
-    glow1: 'from-indigo-600/50 to-blue-500/50',
-    glow2: 'from-fuchsia-600/50 to-purple-500/50',
-    glow3: 'from-cyan-400/40 to-sky-500/40',
-  },
-  // 4. Sunset Crimson & Solar Orange & Violet Purple
-  {
-    glow1: 'from-rose-500/50 to-red-600/50',
-    glow2: 'from-orange-500/50 to-amber-500/50',
-    glow3: 'from-indigo-500/40 to-purple-600/40',
-  },
-  // 5. Deep Aqua & Bright Lime & Electric Sapphire
-  {
-    glow1: 'from-teal-400/50 to-cyan-500/50',
-    glow2: 'from-lime-500/40 to-emerald-500/50',
-    glow3: 'from-blue-600/50 to-violet-500/40',
-  },
+interface Bubble {
+  id: number;
+  left: number; // 0 to 100%
+  size: number; // width/height in px
+  duration: number; // animation duration in seconds
+  delay: number; // animation delay in seconds
+  color: string; // gradient background color class
+  shadow: string; // glow shadow box
+}
+
+const BUBBLE_COLORS = [
+  { bg: 'bg-gradient-to-br from-cyan-400 to-blue-600', shadow: 'shadow-[0_0_15px_rgba(6,182,212,0.6)]' },
+  { bg: 'bg-gradient-to-br from-purple-500 to-pink-500', shadow: 'shadow-[0_0_15px_rgba(168,85,247,0.6)]' },
+  { bg: 'bg-gradient-to-br from-emerald-400 to-teal-500', shadow: 'shadow-[0_0_15px_rgba(52,211,153,0.6)]' },
+  { bg: 'bg-gradient-to-br from-amber-400 to-orange-500', shadow: 'shadow-[0_0_15px_rgba(251,191,36,0.6)]' },
+  { bg: 'bg-gradient-to-br from-rose-500 to-red-600', shadow: 'shadow-[0_0_15px_rgba(244,63,94,0.6)]' },
+  { bg: 'bg-gradient-to-br from-fuchsia-500 to-indigo-500', shadow: 'shadow-[0_0_15px_rgba(217,70,239,0.6)]' },
 ];
 
 export default function DynamicBackground() {
-  const [themeIndex, setThemeIndex] = useState(0);
+  const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const pathname = usePathname();
 
-  // 1. Shift color theme every 4 seconds (between 3 to 5 seconds as requested)
+  // Generate 25 persistent falling bubbles with different sizes, colors, positions, delays & speeds
   useEffect(() => {
-    const timer = setInterval(() => {
-      setThemeIndex((prev) => (prev + 1) % COLOR_THEMES.length);
-    }, 4000);
-    return () => clearInterval(timer);
+    const generatedBubbles: Bubble[] = Array.from({ length: 25 }, (_, i) => {
+      const colorObj = BUBBLE_COLORS[i % BUBBLE_COLORS.length];
+      return {
+        id: i,
+        left: Math.floor(Math.random() * 96) + 2, // 2% to 98% horizontal position
+        size: Math.floor(Math.random() * 24) + 14, // 14px to 38px bubble size
+        duration: Math.floor(Math.random() * 3) + 3.5, // 3.5s to 6.5s falling speed
+        delay: Number((Math.random() * 4).toFixed(2)), // 0s to 4s stagger delay
+        color: colorObj.bg,
+        shadow: colorObj.shadow,
+      };
+    });
+    setBubbles(generatedBubbles);
   }, []);
 
-  // 2. Change color theme immediately when user navigates or clicks a tool
+  // When clicking a tool / changing routes, reshuffle bubble positions & colors dynamically
   useEffect(() => {
-    setThemeIndex((prev) => (prev + 1) % COLOR_THEMES.length);
+    setBubbles((prev) =>
+      prev.map((b) => {
+        const nextColor = BUBBLE_COLORS[Math.floor(Math.random() * BUBBLE_COLORS.length)];
+        return {
+          ...b,
+          left: Math.floor(Math.random() * 96) + 2,
+          color: nextColor.bg,
+          shadow: nextColor.shadow,
+        };
+      })
+    );
   }, [pathname]);
-
-  const currentTheme = COLOR_THEMES[themeIndex];
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Dynamic Animated Gradient Blob 1 (Top Left) */}
-      <div
-        className={`absolute -top-32 -left-32 w-[550px] h-[550px] rounded-full bg-gradient-to-br ${currentTheme.glow1} blur-[120px] transition-all duration-[3000ms] ease-in-out transform animate-pulse`}
-      />
+      {/* Dynamic Falling Bubbles Layer */}
+      {bubbles.map((b) => (
+        <div
+          key={b.id}
+          className={`absolute rounded-full opacity-80 ${b.color} ${b.shadow} animate-bubble-fall`}
+          style={{
+            left: `${b.left}%`,
+            width: `${b.size}px`,
+            height: `${b.size}px`,
+            animationDuration: `${b.duration}s`,
+            animationDelay: `${b.delay}s`,
+          }}
+        >
+          {/* Inner highlight bubble sheen */}
+          <div className="w-1.5 h-1.5 rounded-full bg-white/70 absolute top-1 left-1.5 blur-[0.5px]" />
+        </div>
+      ))}
 
-      {/* Dynamic Animated Gradient Blob 2 (Bottom Right) */}
-      <div
-        className={`absolute -bottom-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-tl ${currentTheme.glow2} blur-[130px] transition-all duration-[3000ms] ease-in-out transform`}
-      />
+      {/* Ambient Backlight Colors */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute bottom-0 right-1/4 w-[450px] h-[450px] bg-purple-600/15 rounded-full blur-[140px]" />
 
-      {/* Dynamic Animated Gradient Blob 3 (Center Ambient) */}
-      <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-gradient-to-r ${currentTheme.glow3} blur-[140px] transition-all duration-[3000ms] ease-in-out opacity-80`}
-      />
-
-      {/* Subdued Grid Mesh Overlay */}
+      {/* Subdued Grid Background */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:24px_24px]" />
     </div>
   );
