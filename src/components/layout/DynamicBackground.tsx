@@ -3,84 +3,73 @@
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-interface Bubble {
-  id: number;
-  left: number; // 0 to 100%
-  size: number; // width/height in px
-  duration: number; // animation duration in seconds
-  delay: number; // animation delay in seconds
-  color: string; // gradient background color class
-  shadow: string; // glow shadow box
-}
-
-const BUBBLE_COLORS = [
-  { bg: 'bg-gradient-to-br from-cyan-400 to-blue-600', shadow: 'shadow-[0_0_15px_rgba(6,182,212,0.6)]' },
-  { bg: 'bg-gradient-to-br from-purple-500 to-pink-500', shadow: 'shadow-[0_0_15px_rgba(168,85,247,0.6)]' },
-  { bg: 'bg-gradient-to-br from-emerald-400 to-teal-500', shadow: 'shadow-[0_0_15px_rgba(52,211,153,0.6)]' },
-  { bg: 'bg-gradient-to-br from-amber-400 to-orange-500', shadow: 'shadow-[0_0_15px_rgba(251,191,36,0.6)]' },
-  { bg: 'bg-gradient-to-br from-rose-500 to-red-600', shadow: 'shadow-[0_0_15px_rgba(244,63,94,0.6)]' },
-  { bg: 'bg-gradient-to-br from-fuchsia-500 to-indigo-500', shadow: 'shadow-[0_0_15px_rgba(217,70,239,0.6)]' },
+// Color themes with 3 distinct vibrant background gradient colors each
+const COLOR_THEMES = [
+  {
+    blob1: 'from-cyan-500 via-blue-600 to-indigo-700',
+    blob2: 'from-purple-600 via-fuchsia-500 to-pink-500',
+    blob3: 'from-teal-400 via-emerald-500 to-cyan-600',
+  },
+  {
+    blob1: 'from-emerald-500 via-teal-600 to-cyan-700',
+    blob2: 'from-amber-500 via-orange-500 to-red-600',
+    blob3: 'from-blue-600 via-indigo-600 to-purple-700',
+  },
+  {
+    blob1: 'from-rose-500 via-pink-600 to-purple-600',
+    blob2: 'from-violet-600 via-indigo-500 to-cyan-500',
+    blob3: 'from-amber-400 via-yellow-500 to-emerald-500',
+  },
+  {
+    blob1: 'from-indigo-600 via-purple-600 to-pink-600',
+    blob2: 'from-cyan-400 via-teal-500 to-blue-600',
+    blob3: 'from-fuchsia-500 via-rose-500 to-amber-500',
+  },
+  {
+    blob1: 'from-blue-500 via-cyan-400 to-teal-500',
+    blob2: 'from-purple-500 via-violet-600 to-indigo-700',
+    blob3: 'from-rose-600 via-crimson-500 to-orange-500',
+  },
 ];
 
 export default function DynamicBackground() {
-  const [bubbles, setBubbles] = useState<Bubble[]>([]);
+  const [themeIndex, setThemeIndex] = useState(0);
   const pathname = usePathname();
 
-  // Generate 35 vibrant, large falling bubbles
+  // Cycle colors automatically every 4 seconds
   useEffect(() => {
-    const generatedBubbles: Bubble[] = Array.from({ length: 35 }, (_, i) => {
-      const colorObj = BUBBLE_COLORS[i % BUBBLE_COLORS.length];
-      return {
-        id: i,
-        left: Math.floor(Math.random() * 96) + 2, // 2% to 98% horizontal position
-        size: Math.floor(Math.random() * 30) + 24, // 24px to 54px large bubble size
-        duration: Math.floor(Math.random() * 3) + 4, // 4s to 7s falling speed
-        delay: Number((Math.random() * 5).toFixed(2)), // 0s to 5s stagger delay
-        color: colorObj.bg,
-        shadow: colorObj.shadow,
-      };
-    });
-    setBubbles(generatedBubbles);
+    const interval = setInterval(() => {
+      setThemeIndex((prev) => (prev + 1) % COLOR_THEMES.length);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
-  // When clicking a tool / changing routes, reshuffle bubble positions & colors dynamically
+  // Change color immediately when user clicks on a tool / changes route
   useEffect(() => {
-    setBubbles((prev) =>
-      prev.map((b) => {
-        const nextColor = BUBBLE_COLORS[Math.floor(Math.random() * BUBBLE_COLORS.length)];
-        return {
-          ...b,
-          left: Math.floor(Math.random() * 96) + 2,
-          color: nextColor.bg,
-          shadow: nextColor.shadow,
-        };
-      })
-    );
+    setThemeIndex((prev) => (prev + 1) % COLOR_THEMES.length);
   }, [pathname]);
 
-  return (
-    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
-      {/* Dynamic Falling Bubbles Layer */}
-      {bubbles.map((b) => (
-        <div
-          key={b.id}
-          className={`absolute rounded-full opacity-90 ${b.color} ${b.shadow} animate-bubble-fall`}
-          style={{
-            left: `${b.left}%`,
-            width: `${b.size}px`,
-            height: `${b.size}px`,
-            animationDuration: `${b.duration}s`,
-            animationDelay: `${b.delay}s`,
-          }}
-        >
-          {/* Inner highlight bubble sheen */}
-          <div className="w-2.5 h-2.5 rounded-full bg-white/80 absolute top-1.5 left-2 blur-[0.5px]" />
-        </div>
-      ))}
+  const currentTheme = COLOR_THEMES[themeIndex];
 
-      {/* Ambient Backlight Colors */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-500/25 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-0 right-1/4 w-[550px] h-[550px] bg-purple-600/25 rounded-full blur-[140px]" />
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-slate-950/80">
+      {/* Blob 1 - Top Left */}
+      <div
+        className={`absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br ${currentTheme.blob1} opacity-60 blur-[130px] transition-all duration-[3000ms] ease-in-out transform hover:scale-110`}
+      />
+
+      {/* Blob 2 - Bottom Right */}
+      <div
+        className={`absolute -bottom-32 -right-32 w-[650px] h-[650px] rounded-full bg-gradient-to-br ${currentTheme.blob2} opacity-60 blur-[140px] transition-all duration-[3000ms] ease-in-out transform hover:scale-110`}
+      />
+
+      {/* Blob 3 - Center Staggered */}
+      <div
+        className={`absolute top-1/3 left-1/2 -translate-x-1/2 w-[550px] h-[550px] rounded-full bg-gradient-to-br ${currentTheme.blob3} opacity-50 blur-[150px] transition-all duration-[3000ms] ease-in-out transform hover:scale-110`}
+      />
+
+      {/* Subtle overlay grid for tech vibe */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-30" />
     </div>
   );
 }
