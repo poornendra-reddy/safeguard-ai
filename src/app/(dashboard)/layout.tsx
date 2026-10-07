@@ -24,7 +24,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-[#050A0F] text-slate-100 flex flex-col md:flex-row relative z-10 font-sans">
+    <div className="min-h-screen bg-transparent text-slate-100 flex flex-col md:flex-row relative z-10 font-sans">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
@@ -41,13 +41,13 @@ export default function DashboardLayout({
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-h-screen w-full lg:ml-64 pb-16 md:pb-0">
         <Topbar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto bg-[#050A0F]">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto bg-transparent">
           {children}
         </main>
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around p-2.5 bg-[#081118] border-t border-[#1D3038] md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around p-2.5 bg-[#081118]/90 backdrop-blur-md border-t border-[#1D3038] md:hidden">
         {BOTTOM_NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
           const Icon = item.icon;

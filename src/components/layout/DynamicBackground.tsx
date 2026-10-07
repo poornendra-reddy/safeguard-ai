@@ -4,19 +4,15 @@ import React from 'react';
 
 export default function DynamicBackground() {
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050A0F]">
-      {/* Subtle Cyber Grid Pattern */}
-      <div className="absolute inset-0 soc-cyber-grid opacity-60" />
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#030712]">
+      {/* Full-screen Cyber Grid Pattern (matches user reference image) */}
+      <div className="absolute inset-0 bg-cyber-grid opacity-80" />
 
-      {/* Subtle Dot Matrix Layer */}
-      <div className="absolute inset-0 soc-dot-matrix opacity-40" />
+      {/* Central Cyan Spotlight Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.12)_0%,rgba(0,201,215,0.03)_45%,transparent_70%)] blur-[20px]" />
 
-      {/* Subtle Scanline Overlay */}
-      <div className="absolute inset-0 soc-scanline opacity-30" />
-
-      {/* Deep SOC Ambient Glows (Very Dark & Clean) */}
-      <div className="absolute -top-40 left-1/4 w-[700px] h-[500px] bg-cyan-950/20 rounded-full blur-[160px]" />
-      <div className="absolute -bottom-40 right-1/4 w-[700px] h-[500px] bg-slate-950/40 rounded-full blur-[160px]" />
+      {/* Secondary Bottom Ambient Glow */}
+      <div className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.06)_0%,transparent_70%)] blur-[30px]" />
     </div>
   );
 }

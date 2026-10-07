@@ -4,30 +4,30 @@
 
 @layer base {
   :root {
-    --background: 210 50% 4%;
+    --background: 222 47% 4%;
     --foreground: 210 40% 98%;
-    --card: 210 40% 8%;
+    --card: 222 47% 6%;
     --card-foreground: 210 40% 98%;
-    --popover: 210 40% 8%;
+    --popover: 222 47% 6%;
     --popover-foreground: 210 40% 98%;
     --primary: 186 100% 50%;
-    --primary-foreground: 210 50% 4%;
-    --secondary: 210 30% 12%;
+    --primary-foreground: 222 47% 4%;
+    --secondary: 217 33% 10%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 210 30% 15%;
+    --muted: 217 33% 12%;
     --muted-foreground: 215 20% 65%;
     --accent: 186 100% 50%;
-    --accent-foreground: 210 50% 4%;
+    --accent-foreground: 222 47% 4%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 198 32% 17%;
-    --input: 198 32% 17%;
+    --border: 217 33% 15%;
+    --input: 217 33% 15%;
     --ring: 186 100% 50%;
     --radius: 0.5rem;
   }
 
   body {
-    background-color: #050A0F;
+    background-color: #030712;
     color: #F1F5F9;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -41,48 +41,32 @@
 }
 
 @layer utilities {
+  .bg-cyber-grid {
+    background-size: 36px 36px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 229, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 229, 255, 0.07) 1px, transparent 1px);
+  }
+
   .soc-card {
-    background-color: #0E171F;
-    border: 1px solid #1D3038;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+    background-color: #0B131E;
+    border: 1px solid #192837;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
   }
   
   .soc-card-hover {
     transition: all 0.2s ease-in-out;
   }
   .soc-card-hover:hover {
-    background-color: #111C24;
-    border-color: #263943;
-    box-shadow: 0 6px 24px -2px rgba(0, 229, 255, 0.08);
+    background-color: #0F1A28;
+    border-color: #243A4E;
+    box-shadow: 0 6px 24px -2px rgba(0, 229, 255, 0.12);
   }
 
   .glass {
     backdrop-filter: blur(12px);
-    background-color: rgba(14, 23, 31, 0.85);
-    border: 1px solid #1D3038;
-  }
-  
-  .soc-cyber-grid {
-    background-size: 32px 32px;
-    background-image: 
-      linear-gradient(to right, rgba(29, 48, 56, 0.25) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(29, 48, 56, 0.25) 1px, transparent 1px);
-  }
-
-  .soc-dot-matrix {
-    background-image: radial-gradient(rgba(0, 229, 255, 0.12) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  .soc-scanline {
-    background: linear-gradient(
-      to bottom,
-      rgba(255,255,255,0),
-      rgba(255,255,255,0) 50%,
-      rgba(0, 229, 255, 0.03) 50%,
-      rgba(0, 229, 255, 0.03)
-    );
-    background-size: 100% 4px;
+    background-color: rgba(11, 19, 30, 0.85);
+    border: 1px solid #192837;
   }
 
   /* Custom scrollbar */
@@ -91,23 +75,13 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #050A0F;
+    background: #030712;
   }
   ::-webkit-scrollbar-thumb {
-    background: #1D3038;
+    background: #192837;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #00E5FF;
   }
-
-  /* Animations */
-  .animate-pulse-cyan {
-    animation: pulseCyan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-}
-
-@keyframes pulseCyan {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
 }
