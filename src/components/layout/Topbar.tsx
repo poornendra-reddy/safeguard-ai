@@ -2,8 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Menu, Search, Bell, Sun, Moon, Settings, LogOut } from 'lucide-react';
-import { useTheme, useAuth, useNotifications } from '@/lib/context/providers';
+import { Menu, Search, Bell, ShieldCheck, Settings, LogOut, Activity } from 'lucide-react';
+import { useAuth, useNotifications } from '@/lib/context/providers';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TopbarProps {
@@ -11,66 +11,72 @@ interface TopbarProps {
 }
 
 export default function Topbar({ onMenuClick }: TopbarProps = {}) {
-  const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
   const { unreadCount } = useNotifications();
   const [showDropdown, setShowDropdown] = React.useState(false);
 
   return (
-    <header className="h-16 sticky top-0 z-20 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800/50">
-      <div className="flex items-center justify-between h-full px-4 lg:px-8">
+    <header className="h-16 sticky top-0 z-20 bg-[#081118]/90 backdrop-blur-md border-b border-[#1D3038] select-none">
+      <div className="flex items-center justify-between h-full px-4 lg:px-6">
         
-        {/* Left side */}
+        {/* Left side: Mobile Toggle & Search */}
         <div className="flex items-center gap-4">
           <button 
             onClick={onMenuClick}
-            className="lg:hidden p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-[#111C24] rounded-md border border-[#1D3038] transition-colors"
             aria-label="Open mobile navigation menu"
           >
             <Menu className="w-5 h-5" />
           </button>
           
-          <div className="hidden md:flex items-center relative group">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 group-focus-within:text-cyan-500 transition-colors" />
+          <div className="hidden md:flex items-center relative">
+            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search history, threats..."
-              className="bg-gray-100 dark:bg-gray-950 border border-transparent dark:border-gray-800 focus:border-cyan-500/50 dark:focus:border-cyan-500/50 text-sm rounded-lg pl-9 pr-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all dark:text-white"
+              placeholder="Search threat IPs, URLs, hashes, logs..."
+              className="bg-[#050A0F] border border-[#1D3038] focus:border-[#00E5FF] text-xs text-slate-200 placeholder:text-slate-500 rounded-md pl-8 pr-4 py-2 w-72 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/30 font-mono transition-all"
             />
           </div>
         </div>
 
-        {/* Right side */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          <button
-            onClick={toggleTheme}
-            className="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-            title="Toggle theme"
-          >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
+        {/* Right side: Security Status Indicator & Controls */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          {/* Security Status Tag */}
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#0E171F] border border-[#1D3038] font-mono text-[11px]">
+            <div className="flex items-center gap-1.5 text-[#22C55E]">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="font-semibold uppercase tracking-wider">PROTECTED</span>
+            </div>
+            <span className="text-slate-600">|</span>
+            <span className="text-slate-400 flex items-center gap-1">
+              <Activity className="w-3 h-3 text-[#00E5FF] animate-pulse" />
+              Live Scan
+            </span>
+          </div>
 
           <Link
             href="/notifications"
-            className="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors relative"
+            className="p-2 text-slate-400 hover:text-[#00E5FF] hover:bg-[#0E171F] rounded-md border border-[#1D3038] transition-colors relative"
+            title="Security Notifications"
           >
-            <Bell className="w-5 h-5" />
+            <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse-glow"></span>
+              <span className="absolute top-1 right-1 w-2 h-2 bg-[#FF1744] rounded-full animate-ping" />
             )}
           </Link>
 
+          {/* Operator Profile Dropdown */}
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-2 p-1 pl-2 pr-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="flex items-center gap-2 p-1.5 rounded-md bg-[#0E171F] border border-[#1D3038] hover:border-[#263943] transition-colors"
             >
-              <span className="text-sm font-medium hidden sm:block dark:text-white">
-                {user?.name?.split(' ')[0] || 'User'}
-              </span>
-              <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-semibold text-sm">
-                {user?.name?.charAt(0) || 'U'}
+              <div className="w-6 h-6 rounded bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40 flex items-center justify-center font-mono font-bold text-xs">
+                {user?.name?.charAt(0) || 'S'}
               </div>
+              <span className="text-xs font-medium hidden sm:block text-slate-200">
+                {user?.name?.split(' ')[0] || 'Operator'}
+              </span>
             </button>
 
             <AnimatePresence>
@@ -81,24 +87,24 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
                     onClick={() => setShowDropdown(false)}
                   />
                   <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800/50 py-1 z-20"
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute right-0 mt-2 w-56 bg-[#0E171F] rounded-md shadow-2xl border border-[#1D3038] py-1 z-20 font-sans"
                   >
-                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-800/50 mb-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user?.name || 'User Name'}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email || 'user@example.com'}</p>
+                    <div className="px-4 py-2.5 border-b border-[#1D3038] mb-1">
+                      <p className="text-xs font-semibold text-slate-100 truncate">{user?.name || 'SOC Operator'}</p>
+                      <p className="text-[10px] font-mono text-[#00E5FF] truncate">{user?.email || 'operator@safeguard.ai'}</p>
                     </div>
                     
                     <Link
                       href="/settings"
                       onClick={() => setShowDropdown(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-slate-300 hover:bg-[#111C24] hover:text-[#00E5FF] transition-colors"
                     >
-                      <Settings className="w-4 h-4" />
-                      Settings
+                      <Settings className="w-3.5 h-3.5" />
+                      Security Preferences
                     </Link>
                     
                     <button
@@ -106,10 +112,10 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
                         logout();
                         setShowDropdown(false);
                       }}
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 w-full text-left transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-[#FF3B3B] hover:bg-[#FF3B3B]/10 w-full text-left transition-colors"
                     >
-                      <LogOut className="w-4 h-4" />
-                      Logout
+                      <LogOut className="w-3.5 h-3.5" />
+                      Terminate Session
                     </button>
                   </motion.div>
                 </>
