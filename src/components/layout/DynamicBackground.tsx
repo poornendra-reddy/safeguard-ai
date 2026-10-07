@@ -5,35 +5,35 @@ import { usePathname } from 'next/navigation';
 
 // Color themes array (Each item has 3 distinct complementary gradient colors)
 const COLOR_THEMES = [
-  // 1. Cybersecurity Cyber Cyan & Electric Violet & Deep Indigo
+  // 1. Cybersecurity Cyber Cyan & Electric Purple & Emerald Teal
   {
-    glow1: 'from-cyan-500/25 to-blue-600/25',
-    glow2: 'from-purple-600/25 to-pink-500/25',
-    glow3: 'from-emerald-500/20 to-teal-400/20',
+    glow1: 'from-cyan-500/50 to-blue-600/50',
+    glow2: 'from-purple-600/50 to-pink-500/50',
+    glow3: 'from-emerald-500/40 to-teal-400/40',
   },
-  // 2. Neon Emerald & Gold Amber & Crimson
+  // 2. Neon Emerald & Golden Amber & Crimson Red
   {
-    glow1: 'from-emerald-500/25 to-teal-500/25',
-    glow2: 'from-amber-500/25 to-yellow-400/25',
-    glow3: 'from-red-500/20 to-rose-600/20',
+    glow1: 'from-emerald-500/50 to-teal-500/50',
+    glow2: 'from-amber-500/50 to-yellow-400/50',
+    glow3: 'from-red-500/40 to-rose-600/40',
   },
-  // 3. Royal Violet & Azure Blue & Magenta
+  // 3. Royal Indigo & Electric Blue & Bright Magenta
   {
-    glow1: 'from-indigo-600/25 to-blue-500/25',
-    glow2: 'from-fuchsia-600/25 to-purple-500/25',
-    glow3: 'from-cyan-400/20 to-sky-500/20',
+    glow1: 'from-indigo-600/50 to-blue-500/50',
+    glow2: 'from-fuchsia-600/50 to-purple-500/50',
+    glow3: 'from-cyan-400/40 to-sky-500/40',
   },
-  // 4. Sunset Crimson & Solar Orange & Violet
+  // 4. Sunset Crimson & Solar Orange & Violet Purple
   {
-    glow1: 'from-rose-500/25 to-red-600/25',
-    glow2: 'from-orange-500/25 to-amber-500/25',
-    glow3: 'from-indigo-500/20 to-purple-600/20',
+    glow1: 'from-rose-500/50 to-red-600/50',
+    glow2: 'from-orange-500/50 to-amber-500/50',
+    glow3: 'from-indigo-500/40 to-purple-600/40',
   },
-  // 5. Deep Aqua & Lime Green & Electric Blue
+  // 5. Deep Aqua & Bright Lime & Electric Sapphire
   {
-    glow1: 'from-teal-400/25 to-cyan-500/25',
-    glow2: 'from-lime-500/20 to-emerald-500/25',
-    glow3: 'from-blue-600/25 to-violet-500/20',
+    glow1: 'from-teal-400/50 to-cyan-500/50',
+    glow2: 'from-lime-500/40 to-emerald-500/50',
+    glow3: 'from-blue-600/50 to-violet-500/40',
   },
 ];
 

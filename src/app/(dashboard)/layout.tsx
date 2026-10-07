@@ -24,7 +24,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 flex flex-col md:flex-row relative z-10">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
