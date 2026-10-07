@@ -26,16 +26,16 @@ export default function DynamicBackground() {
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const pathname = usePathname();
 
-  // Generate 25 persistent falling bubbles with different sizes, colors, positions, delays & speeds
+  // Generate 35 vibrant, large falling bubbles
   useEffect(() => {
-    const generatedBubbles: Bubble[] = Array.from({ length: 25 }, (_, i) => {
+    const generatedBubbles: Bubble[] = Array.from({ length: 35 }, (_, i) => {
       const colorObj = BUBBLE_COLORS[i % BUBBLE_COLORS.length];
       return {
         id: i,
         left: Math.floor(Math.random() * 96) + 2, // 2% to 98% horizontal position
-        size: Math.floor(Math.random() * 24) + 14, // 14px to 38px bubble size
-        duration: Math.floor(Math.random() * 3) + 3.5, // 3.5s to 6.5s falling speed
-        delay: Number((Math.random() * 4).toFixed(2)), // 0s to 4s stagger delay
+        size: Math.floor(Math.random() * 30) + 24, // 24px to 54px large bubble size
+        duration: Math.floor(Math.random() * 3) + 4, // 4s to 7s falling speed
+        delay: Number((Math.random() * 5).toFixed(2)), // 0s to 5s stagger delay
         color: colorObj.bg,
         shadow: colorObj.shadow,
       };
@@ -59,12 +59,12 @@ export default function DynamicBackground() {
   }, [pathname]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
       {/* Dynamic Falling Bubbles Layer */}
       {bubbles.map((b) => (
         <div
           key={b.id}
-          className={`absolute rounded-full opacity-80 ${b.color} ${b.shadow} animate-bubble-fall`}
+          className={`absolute rounded-full opacity-90 ${b.color} ${b.shadow} animate-bubble-fall`}
           style={{
             left: `${b.left}%`,
             width: `${b.size}px`,
@@ -74,16 +74,13 @@ export default function DynamicBackground() {
           }}
         >
           {/* Inner highlight bubble sheen */}
-          <div className="w-1.5 h-1.5 rounded-full bg-white/70 absolute top-1 left-1.5 blur-[0.5px]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-white/80 absolute top-1.5 left-2 blur-[0.5px]" />
         </div>
       ))}
 
       {/* Ambient Backlight Colors */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-0 right-1/4 w-[450px] h-[450px] bg-purple-600/15 rounded-full blur-[140px]" />
-
-      {/* Subdued Grid Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:24px_24px]" />
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-500/25 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute bottom-0 right-1/4 w-[550px] h-[550px] bg-purple-600/25 rounded-full blur-[140px]" />
     </div>
   );
 }
