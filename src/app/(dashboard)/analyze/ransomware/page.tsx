@@ -44,12 +44,26 @@ export default function RansomwareShieldPage() {
           />
         </div>
 
-        <button
-          onClick={handleTest}
-          className="px-6 py-3 bg-red-500 hover:bg-red-400 text-white font-medium rounded-xl transition-all flex items-center gap-2"
-        >
-          <Play className="w-5 h-5" /> Run Safe Behavior Analysis
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={handleTest}
+            className="px-6 py-3 bg-red-500 hover:bg-red-400 text-white font-medium rounded-xl transition-all flex items-center gap-2"
+          >
+            <Play className="w-5 h-5" /> Run Safe Behavior Analysis
+          </button>
+          <button
+            onClick={() => {
+              const sampleLog = 'vssadmin.exe delete shadows /all /quiet && wmic shadowcopy delete && bcdedit /set {default} bootstatuspolicy ignoreallfailures';
+              setScenario(sampleLog);
+              const res = analyzeRansomwarePattern(sampleLog);
+              setResult(res);
+              addToHistory(res);
+            }}
+            className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
+          >
+            TRY EXAMPLE
+          </button>
+        </div>
 
         {result && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 pt-4 border-t border-gray-200 dark:border-gray-800">

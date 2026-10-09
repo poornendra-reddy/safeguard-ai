@@ -59,12 +59,26 @@ export default function NetworkRiskPage() {
           </div>
         </div>
 
-        <button
-          onClick={handleScan}
-          className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-white font-medium rounded-xl transition-all flex items-center gap-2"
-        >
-          <RefreshCw className="w-5 h-5" /> Run Wi-Fi Risk Assessment
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={handleScan}
+            className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-white font-medium rounded-xl transition-all flex items-center gap-2"
+          >
+            <RefreshCw className="w-5 h-5" /> Run Wi-Fi Risk Assessment
+          </button>
+          <button
+            onClick={() => {
+              setSsid('Airport_Free_Unsecured_WiFi');
+              setAuthType('Open / No Encryption');
+              const res = analyzeNetworkRisk({ ssid: 'Airport_Free_Unsecured_WiFi', authType: 'Open / No Encryption' });
+              setResult(res);
+              addToHistory(res);
+            }}
+            className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
+          >
+            TRY EXAMPLE
+          </button>
+        </div>
 
         {result && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 pt-4 border-t border-gray-200 dark:border-gray-800">

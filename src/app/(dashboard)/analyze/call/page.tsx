@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   PhoneOff, Search, AlertTriangle, ShieldCheck, RefreshCw, CheckCircle,
   HelpCircle, ChevronDown, ChevronUp, Copy, Share2, Info, Flag, AlertCircle,
-  ShieldAlert, PhoneCall, Radio, UserX
+  ShieldAlert, PhoneCall, Radio, UserX, Zap
 } from 'lucide-react';
 import { useHistory } from '@/lib/context/providers';
 import { AnalysisResult } from '@/types';
@@ -173,7 +173,7 @@ export default function SpamCallDetectorPage() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-4 pt-2">
+        <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <button
             onClick={handleAnalyze}
             disabled={isAnalyzing}
@@ -184,6 +184,17 @@ export default function SpamCallDetectorPage() {
             ) : (
               <><Search className="w-5 h-5" /> Analyze Spam Call</>
             )}
+          </button>
+          <button
+            onClick={() => {
+              setPhoneNumber('+91 91234 56789');
+              setTranscript('Caller claiming to be TRAI official stating my SIM card will be blocked within 2 hours due to illegal harassment complaints unless I verify Aadhaar details.');
+              setError('');
+            }}
+            disabled={isAnalyzing}
+            className="px-5 py-3 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2"
+          >
+            <Zap className="w-4 h-4 text-[#00E5FF]" /> TRY EXAMPLE
           </button>
           <button
             onClick={clearForm}

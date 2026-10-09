@@ -163,23 +163,36 @@ export default function EmailAnalyzerPage() {
 
         {error && <p className="text-red-500 text-sm flex items-center gap-1"><AlertCircle className="w-4 h-4"/>{error}</p>}
 
-        <div className="flex flex-wrap gap-4 items-center justify-between pt-2">
-          <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3 items-center justify-between pt-2">
+          <div className="flex flex-wrap gap-3">
             <button
               onClick={handleAnalyze}
               disabled={isAnalyzing || !body}
-              className="px-6 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-white rounded-lg font-medium transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)] disabled:opacity-50 disabled:shadow-none flex items-center gap-2"
+              className="px-6 py-2.5 bg-[#00E5FF] hover:bg-[#00C9D7] text-[#050A0F] rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.3)] disabled:opacity-50 flex items-center gap-2"
             >
               {isAnalyzing ? (
-                <><RefreshCw className="w-5 h-5 animate-spin" /> Analyzing...</>
+                <><RefreshCw className="w-4 h-4 animate-spin" /> Analyzing...</>
               ) : (
-                <><Zap className="w-5 h-5" /> Analyze Email</>
+                <><Zap className="w-4 h-4" /> Analyze Email</>
               )}
+            </button>
+            <button
+              onClick={() => {
+                setSender('security@paypal-verification-alert.com');
+                setSubject('URGENT: Suspicious Login Detected on your PayPal Account');
+                setBody('Dear Customer,\n\nWe detected an unauthorized login to your account from an unknown IP address. Please verify your credentials immediately to prevent account suspension.\n\nClick here: http://paypal-security-login-verify.com/auth');
+                setLinks('http://paypal-security-login-verify.com/auth');
+                setError('');
+              }}
+              disabled={isAnalyzing}
+              className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50 flex items-center gap-2"
+            >
+              <Zap className="w-4 h-4 text-[#00E5FF]" /> TRY EXAMPLE
             </button>
             <button
               onClick={clearForm}
               disabled={isAnalyzing}
-              className="px-6 py-2.5 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-all disabled:opacity-50"
+              className="px-5 py-2.5 border border-[#1D3038] hover:bg-[#111C24] text-slate-300 rounded-lg font-mono text-xs font-medium transition-all disabled:opacity-50"
             >
               Clear
             </button>

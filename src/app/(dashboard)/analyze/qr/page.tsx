@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { QrCode, Upload, Camera, Link as LinkIcon, ShieldAlert, CheckCircle, AlertTriangle, Shield, Check, Globe, Activity, Loader2 } from 'lucide-react';
+import { QrCode, Upload, Camera, Link as LinkIcon, ShieldAlert, CheckCircle, AlertTriangle, Shield, Check, Globe, Activity, Loader2, Zap } from 'lucide-react';
 import { analyzeURL, type URLAnalysisResult } from '@/lib/ai/url-analyzer';
 
 const ANALYSIS_STEPS = [
@@ -198,6 +198,18 @@ export default function QRCodeAnalyzerPage() {
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     PNG, JPG, JPEG, WEBP (Max 10MB)
                   </p>
+                </div>
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      simulateDecode('https://secure-login-hdfcbank-verify.xyz/account/login?ref=qr_scan');
+                    }}
+                    className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 mx-auto"
+                  >
+                    <Zap className="w-4 h-4 text-[#00E5FF]" /> TRY EXAMPLE
+                  </button>
                 </div>
               </div>
             </div>

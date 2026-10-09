@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Upload, Camera, ShieldAlert, CheckCircle, AlertTriangle, ShieldCheck, RefreshCw, FileText, X, Lock, Check, Video, StopCircle } from 'lucide-react';
+import { Shield, Upload, Camera, ShieldAlert, CheckCircle, AlertTriangle, ShieldCheck, RefreshCw, FileText, X, Lock, Check, Video, StopCircle, Zap } from 'lucide-react';
 import { useHistory } from '@/lib/context/providers';
 import { analyzeMessage } from '@/lib/ai/message-analyzer';
 import { AnalysisResult } from '@/types';
@@ -183,7 +183,7 @@ export default function UploadPhotoToolPage() {
               </p>
             </div>
 
-            {/* ACTION BUTTONS: UPLOAD FROM DEVICE & SCAN WITH CAMERA */}
+            {/* ACTION BUTTONS: UPLOAD FROM DEVICE, SCAN WITH CAMERA & TRY EXAMPLE */}
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               <button
                 onClick={() => fileInputRef.current?.click()}
@@ -199,6 +199,17 @@ export default function UploadPhotoToolPage() {
               >
                 <Camera className="w-4 h-4 text-[#00E5FF]" />
                 <span>SCAN WITH CAMERA</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  const sampleFile = new File(['sample_scam_evidence'], 'bank_verification_scam_evidence.png', { type: 'image/png' });
+                  handleSelectPhoto(sampleFile);
+                }}
+                className="px-6 py-3.5 bg-[#111C24] hover:bg-[#1A2936] text-[#00E5FF] border border-[#1D3038] font-bold rounded-md text-xs font-mono uppercase tracking-wider shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] inline-flex items-center gap-2"
+              >
+                <Zap className="w-4 h-4 text-[#00E5FF]" />
+                <span>TRY EXAMPLE</span>
               </button>
             </div>
 

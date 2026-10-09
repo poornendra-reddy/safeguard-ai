@@ -43,6 +43,22 @@ export default function DeepfakeDetectorPage() {
             <span className="text-lg font-medium text-gray-900 dark:text-white">Upload Image, Audio, or Video File</span>
             <span className="text-xs text-gray-500">Supports MP4, WAV, MP3, PNG, JPG. Scanned for facial and voice frequency anomalies.</span>
           </label>
+          <div className="pt-3">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                const sampleFile = new File(['fake_media'], 'synthetic_ceo_voice_clone.wav', { type: 'audio/wav' });
+                setFile(sampleFile);
+                const res = analyzeDeepfakeMedia({ name: sampleFile.name, type: sampleFile.type, size: 1850000 });
+                setResult(res);
+                addToHistory(res);
+              }}
+              className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all inline-flex items-center gap-2"
+            >
+              TRY EXAMPLE
+            </button>
+          </div>
         </div>
 
         {file && result && (

@@ -45,13 +45,27 @@ export default function CyberbullyingDetectorPage() {
           />
         </div>
 
-        <button
-          onClick={handleAnalyze}
-          disabled={!text.trim()}
-          className="px-6 py-3 bg-pink-500 hover:bg-pink-400 text-white font-medium rounded-xl transition-all flex items-center gap-2 disabled:opacity-50"
-        >
-          <Search className="w-5 h-5" /> Analyze Text Toxicity
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={handleAnalyze}
+            disabled={!text.trim()}
+            className="px-6 py-3 bg-pink-500 hover:bg-pink-400 text-white font-medium rounded-xl transition-all flex items-center gap-2 disabled:opacity-50"
+          >
+            <Search className="w-5 h-5" /> Analyze Text Toxicity
+          </button>
+          <button
+            onClick={() => {
+              const sampleToxicText = 'You are worthless and nobody likes you. Stop posting or we will target you every day.';
+              setText(sampleToxicText);
+              const res = analyzeCyberbullying(sampleToxicText);
+              setResult(res);
+              addToHistory(res);
+            }}
+            className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
+          >
+            TRY EXAMPLE
+          </button>
+        </div>
 
         {result && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 pt-4 border-t border-gray-200 dark:border-gray-800">

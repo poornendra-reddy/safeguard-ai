@@ -71,13 +71,27 @@ export default function SecureFileSharePage() {
           </div>
         </div>
 
-        <button
-          onClick={handleShare}
-          disabled={!file}
-          className="px-6 py-3 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-white font-medium rounded-xl transition-all flex items-center gap-2"
-        >
-          <Share2 className="w-5 h-5" /> Generate Encrypted Link
-        </button>
+        <div className="flex flex-wrap items-center gap-3 pt-2">
+          <button
+            onClick={handleShare}
+            disabled={!file}
+            className="px-6 py-3 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-white font-medium rounded-xl transition-all flex items-center gap-2"
+          >
+            <Share2 className="w-5 h-5" /> Generate Encrypted Link
+          </button>
+          <button
+            onClick={() => {
+              const sampleFile = new File(['confidential_audit_report'], 'Confidential_Audit_Report.pdf', { type: 'application/pdf' });
+              setFile(sampleFile);
+              setPassphrase('SecureVault2026!');
+              const fakeId = Math.random().toString(36).substring(2, 9);
+              setShareLink(`https://trustnetra-wru7.vercel.app/share/${fakeId}?exp=${expiry}&enc=aes256`);
+            }}
+            className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
+          >
+            TRY EXAMPLE
+          </button>
+        </div>
 
         {shareLink && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 space-y-3">

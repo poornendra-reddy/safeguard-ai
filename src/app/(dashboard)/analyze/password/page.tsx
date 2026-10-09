@@ -53,9 +53,22 @@ export default function PasswordCheckerPage() {
             placeholder="Type a password to test strength..."
             className="w-full bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-800 rounded-xl px-4 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all font-mono"
           />
-          <p className="text-xs text-emerald-500 mt-2 flex items-center gap-1">
-            <ShieldCheck className="w-4 h-4" /> 100% Client-Side Computation — zero data leaves your browser.
-          </p>
+          <div className="flex items-center gap-3 mt-3">
+            <button
+              onClick={() => {
+                const samplePass = 'Password123!';
+                setPassword(samplePass);
+                const res = checkPassword(samplePass);
+                setResult(res);
+              }}
+              className="px-4 py-2 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5"
+            >
+              <Key className="w-3.5 h-3.5 text-[#00E5FF]" /> TRY EXAMPLE
+            </button>
+            <p className="text-xs text-emerald-500 flex items-center gap-1">
+              <ShieldCheck className="w-4 h-4" /> 100% Client-Side Computation — zero data leaves your browser.
+            </p>
+          </div>
         </div>
 
         {result && (

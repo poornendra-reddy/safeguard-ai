@@ -45,13 +45,27 @@ export default function BrowserPermissionPage() {
           />
         </div>
 
-        <button
-          onClick={handleAnalyze}
-          disabled={!manifestText.trim()}
-          className="px-6 py-3 bg-orange-500 hover:bg-orange-400 text-white font-medium rounded-xl transition-all flex items-center gap-2 disabled:opacity-50"
-        >
-          <Search className="w-5 h-5" /> Analyze Extension Permissions
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={handleAnalyze}
+            disabled={!manifestText.trim()}
+            className="px-6 py-3 bg-orange-500 hover:bg-orange-400 text-white font-medium rounded-xl transition-all flex items-center gap-2 disabled:opacity-50"
+          >
+            <Search className="w-5 h-5" /> Analyze Extension Permissions
+          </button>
+          <button
+            onClick={() => {
+              const sampleManifest = `{\n  "name": "Super PDF Downloader",\n  "permissions": ["<all_urls>", "cookies", "webRequest", "webRequestBlocking", "tabs", "storage", "clipboardRead"]\n}`;
+              setManifestText(sampleManifest);
+              const res = analyzeBrowserPermissions(sampleManifest);
+              setResult(res);
+              addToHistory(res);
+            }}
+            className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
+          >
+            TRY EXAMPLE
+          </button>
+        </div>
 
         {result && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 pt-4 border-t border-gray-200 dark:border-gray-800">

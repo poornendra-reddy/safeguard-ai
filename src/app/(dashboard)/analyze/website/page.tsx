@@ -95,7 +95,7 @@ export default function WebsiteSafetyCheckerPage() {
               className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
             />
           </div>
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap gap-3">
             <button
               type="submit"
               disabled={isAnalyzing || !urlInput.trim()}
@@ -109,6 +109,19 @@ export default function WebsiteSafetyCheckerPage() {
               ) : (
                 'Check Website'
               )}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const sampleDomain = 'flipkart-mega-deal-90off.shop';
+                setUrlInput(sampleDomain);
+                const res = analyzeURL(sampleDomain);
+                setResult(res);
+              }}
+              disabled={isAnalyzing}
+              className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
+            >
+              TRY EXAMPLE
             </button>
           </div>
         </form>
