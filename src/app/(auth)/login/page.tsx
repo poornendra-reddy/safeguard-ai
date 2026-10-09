@@ -89,7 +89,7 @@ export default function LoginPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-4xl font-bold mb-4 text-white"
           >
-            SafeGuard AI
+            TrustNetra
           </motion.h1>
           
           <motion.p 
@@ -124,7 +124,7 @@ export default function LoginPage() {
         >
           <div className="lg:hidden flex items-center gap-3 mb-8">
             <Shield className="w-8 h-8 text-cyan-500" />
-            <span className="text-2xl font-bold">SafeGuard AI</span>
+            <span className="text-2xl font-bold">TrustNetra</span>
           </div>
 
           <div className="mb-8">

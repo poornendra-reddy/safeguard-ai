@@ -125,7 +125,7 @@ export default function RegisterPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-4xl font-bold mb-4 text-white"
           >
-            Join SafeGuard AI
+            Join TrustNetra
           </motion.h1>
           
           <motion.p 
@@ -160,12 +160,12 @@ export default function RegisterPage() {
         >
           <div className="lg:hidden flex items-center gap-3 mb-8">
             <Shield className="w-8 h-8 text-cyan-500" />
-            <span className="text-2xl font-bold">SafeGuard AI</span>
+            <span className="text-2xl font-bold">TrustNetra</span>
           </div>
 
           <div className="mb-8">
             <h2 className="text-3xl font-bold mb-2">Create Account</h2>
-            <p className="text-gray-500 dark:text-gray-400">Sign up to get started with SafeGuard AI.</p>
+            <p className="text-gray-500 dark:text-gray-400">Sign up to get started with TrustNetra.</p>
           </div>
 
           <div className="bg-white dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl">

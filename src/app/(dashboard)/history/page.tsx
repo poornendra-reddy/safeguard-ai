@@ -35,7 +35,7 @@ export default function HistoryPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `safeguard-history-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `trustnetra-history-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };

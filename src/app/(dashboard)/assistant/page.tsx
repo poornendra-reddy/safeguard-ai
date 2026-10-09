@@ -17,7 +17,7 @@ export default function AssistantPage() {
     {
       id: '1',
       type: 'assistant',
-      content: CHATBOT_RESPONSES['default'] || "Hello! I'm your SafeGuard Security Assistant. How can I help you today?",
+      content: CHATBOT_RESPONSES['default'] || "Hello! I'm your TrustNetra Security Assistant. How can I help you today?",
       timestamp: new Date()
     }
   ]);
@@ -96,7 +96,7 @@ export default function AssistantPage() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-3 text-gray-900 dark:text-white">
             <Bot className="w-8 h-8 text-cyan-500" />
-            SafeGuard Assistant
+            TrustNetra Assistant
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">AI-powered security advisor at your service.</p>
         </div>

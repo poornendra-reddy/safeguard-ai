@@ -107,7 +107,7 @@ export default function Sidebar({ onClose }: SidebarProps = {}) {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-base tracking-wide text-slate-100 flex items-center gap-1.5">
-                SAFEGUARD <span className="text-[#00E5FF] text-xs font-semibold px-1.5 py-0.5 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30">SOC</span>
+                TRUSTNETRA <span className="text-[#00E5FF] text-xs font-semibold px-1.5 py-0.5 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30">SOC</span>
               </span>
               <span className="text-[10px] text-slate-400 font-mono tracking-wider uppercase">Threat Detection</span>
             </div>
@@ -185,7 +185,7 @@ export default function Sidebar({ onClose }: SidebarProps = {}) {
                   {user?.name || 'SOC Operator'}
                 </span>
                 <span className="text-[10px] font-mono text-slate-500 truncate">
-                  {user?.email || 'operator@safeguard.ai'}
+                  {user?.email || 'operator@trustnetra.ai'}
                 </span>
               </div>
             )}

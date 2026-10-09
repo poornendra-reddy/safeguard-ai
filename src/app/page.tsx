@@ -34,7 +34,7 @@ export default function LandingPage() {
                 <div className="p-2 bg-cyan-500/10 rounded-lg group-hover:bg-cyan-500/20 transition-colors">
                   <Shield className="w-6 h-6 text-cyan-500" />
                 </div>
-                <span className="font-bold text-xl tracking-tight">SafeGuard AI</span>
+                <span className="font-bold text-xl tracking-tight">TrustNetra</span>
               </Link>
             </div>
             
@@ -206,7 +206,7 @@ function HowItWorksSection() {
     <section id="how-it-works" className="py-20 bg-white/50 dark:bg-gray-900/20 border-y border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">How SafeGuard Works</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">How TrustNetra Works</h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Seamless protection in milliseconds. Just input the suspicious content, and let AI do the heavy lifting.</p>
         </div>
         
@@ -381,7 +381,7 @@ function WhyUsSection() {
     <section className="py-24 bg-white/50 dark:bg-gray-900/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose SafeGuard AI?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose TrustNetra?</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {usps.map((usp, idx) => (
@@ -478,7 +478,7 @@ function Footer() {
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <Shield className="w-6 h-6 text-cyan-500" />
-              <span className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">SafeGuard AI</span>
+              <span className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">TrustNetra</span>
             </Link>
             <p className="text-gray-500 dark:text-gray-400 max-w-sm mb-6">
               Detect. Understand. Stay Safe. AI-powered protection against modern digital threats.
@@ -512,7 +512,7 @@ function Footer() {
         
         <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
-            © 2026 SafeGuard AI. All rights reserved.
+            © 2026 TrustNetra. All rights reserved.
           </p>
           <div className="flex gap-4">
             {/* Social Placeholders */}

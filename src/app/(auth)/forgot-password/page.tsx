@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-3">
             <Shield className="w-8 h-8 text-cyan-500" />
-            <span className="text-2xl font-bold">SafeGuard AI</span>
+            <span className="text-2xl font-bold">TrustNetra</span>
           </div>
         </div>
 

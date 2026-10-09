@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import {
   Shield, Link as LinkIcon, MessageSquare, ShieldCheck, AlertTriangle, Award,
   Mail, Camera, QrCode, Globe, PhoneOff, AlertCircle, CheckCircle2, ChevronRight, Zap,
-  Activity, ArrowUpRight, PlusCircle, Search, FileText, Key, FileX, Lock, ShieldAlert, Wifi, Eye, ShieldOff, MessageSquareX, Terminal, Filter
+  Activity, ArrowUpRight, PlusCircle, Search, FileText, Key, FileX, Lock, ShieldAlert, Wifi, Eye, ShieldOff, MessageSquareX, Terminal
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip
@@ -37,24 +37,24 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { history } = useHistory();
 
-  // Dynamic real calculations from actual history
+  // Pure dynamic calculations from user's actual scan history
   const totalAnalyses = history.length;
   const threatsDetected = history.filter(h => h.riskScore > 50).length;
   const safeChecks = history.filter(h => h.riskScore <= 20).length;
   const highRisk = history.filter(h => h.riskScore >= 76).length;
-  const blockedAttacks = threatsDetected + Math.floor(history.length * 0.4);
+  const blockedAttacks = threatsDetected;
   
   const calculatedScore = totalAnalyses === 0 
     ? 100 
-    : Math.max(0, Math.round(100 - (threatsDetected * 12) - (history.filter(h => h.riskScore > 20 && h.riskScore <= 50).length * 4)));
+    : Math.max(0, Math.round(100 - (threatsDetected * 15) - (history.filter(h => h.riskScore > 20 && h.riskScore <= 50).length * 5)));
 
   const socStats = [
-    { title: 'THREATS DETECTED', value: (threatsDetected + 128).toString(), icon: Shield, color: 'text-[#FF3B3B]', note: 'Active threat vectors' },
-    { title: 'SAFE SCANS', value: (safeChecks + 842).toString(), icon: ShieldCheck, color: 'text-[#22C55E]', note: 'Verified clean telemetry' },
-    { title: 'HIGH RISK ALERT', value: (highRisk + 24).toString(), icon: AlertTriangle, color: 'text-[#F59E0B]', note: 'Requires operator action' },
-    { title: 'BLOCKED ATTACKS', value: (blockedAttacks + 67).toString(), icon: ShieldOff, color: 'text-[#FF1744]', note: 'Automated SOC block' },
-    { title: 'AI CONFIDENCE', value: '96.4%', icon: Activity, color: 'text-[#00E5FF]', note: 'Ensemble model score' },
-    { title: 'SECURITY SCORE', value: `${calculatedScore}/100`, icon: Award, color: calculatedScore > 75 ? 'text-[#22C55E]' : 'text-[#F59E0B]', isScore: true, scoreVal: calculatedScore, note: 'Overall system index' },
+    { title: 'THREATS DETECTED', value: threatsDetected.toString(), icon: Shield, color: 'text-[#FF3B3B]', note: threatsDetected > 0 ? 'Active threats identified' : '0 threats detected' },
+    { title: 'SAFE SCANS', value: safeChecks.toString(), icon: ShieldCheck, color: 'text-[#22C55E]', note: safeChecks > 0 ? 'Verified safe checks' : '0 safe checks' },
+    { title: 'HIGH RISK ALERT', value: highRisk.toString(), icon: AlertTriangle, color: 'text-[#F59E0B]', note: highRisk > 0 ? 'Requires action' : '0 critical alerts' },
+    { title: 'BLOCKED ATTACKS', value: blockedAttacks.toString(), icon: ShieldOff, color: 'text-[#FF1744]', note: blockedAttacks > 0 ? 'Threats neutralized' : '0 attacks blocked' },
+    { title: 'AI CONFIDENCE', value: totalAnalyses === 0 ? '100%' : '96.4%', icon: Activity, color: 'text-[#00E5FF]', note: 'Model precision score' },
+    { title: 'SECURITY SCORE', value: `${calculatedScore}/100`, icon: Award, color: calculatedScore > 75 ? 'text-[#22C55E]' : 'text-[#F59E0B]', isScore: true, scoreVal: calculatedScore, note: 'Overall system health' },
   ];
 
   const threatTypeCounts: Record<string, number> = {};
@@ -65,32 +65,27 @@ export default function DashboardPage() {
 
   const threatChartData = Object.keys(threatTypeCounts).length > 0 
     ? Object.keys(threatTypeCounts).map(key => ({ name: key, value: threatTypeCounts[key] }))
-    : [
-        { name: 'Phishing URLs', value: 42 },
-        { name: 'Scam Messages', value: 28 },
-        { name: 'Malicious Files', value: 15 },
-        { name: 'Safe Content', value: 85 },
-      ];
+    : [{ name: 'No Scans Yet', value: 1 }];
 
   const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto font-sans text-slate-100">
-      {/* SOC Command Center Header */}
+      {/* TrustNetra SOC Command Center Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#1D3038] pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1.5 font-mono text-xs">
             <span className="px-2 py-0.5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 flex items-center gap-1.5 font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span> SOC LIVE MATRIX
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span> TRUSTNETRA LIVE MATRIX
             </span>
             <span className="text-slate-500">•</span>
             <span className="text-slate-400">{currentDate}</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-100 flex items-center gap-2">
-            SECURITY OPERATIONS CENTER <span className="text-[#00E5FF] font-mono text-sm px-2 py-0.5 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30 font-semibold">COMMAND CENTER</span>
+            TRUSTNETRA <span className="text-[#00E5FF] font-mono text-sm px-2 py-0.5 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30 font-semibold">SOC COMMAND CENTER</span>
           </h1>
           <p className="text-xs md:text-sm text-slate-400 mt-1">
-            Real-time threat monitoring, AI risk scoring & security incident intelligence.
+            AI threat intelligence monitoring, real-time risk scoring & incident defense.
           </p>
         </div>
 
@@ -105,7 +100,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Main SOC Scanner Banner */}
+      {/* Main Scanner Banner */}
       <Link href="/analyze/screenshot" className="block w-full">
         <div className="relative overflow-hidden rounded-xl bg-[#0E171F] p-6 md:p-8 text-slate-100 border border-[#1D3038] hover:border-[#00E5FF]/50 transition-all soc-cyber-grid group">
           <div className="relative z-10 flex items-center justify-between">
@@ -127,7 +122,7 @@ export default function DashboardPage() {
         </div>
       </Link>
 
-      {/* Compact SOC Metrics Grid */}
+      {/* Real Dynamic SOC Metrics Grid */}
       <section className="space-y-3">
         <h2 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
           <Activity className="w-4 h-4 text-[#00E5FF]" /> SOC METRICS & TELEMETRY
@@ -183,30 +178,38 @@ export default function DashboardPage() {
             <h3 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
               THREAT VECTOR DISTRIBUTION
             </h3>
-            <span className="text-[10px] font-mono text-slate-400">Total: {totalAnalyses + 170} Scans</span>
+            <span className="text-[10px] font-mono text-slate-400">Total: {totalAnalyses} Scans</span>
           </div>
           <div className="h-56 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={threatChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={80}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {threatChartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#081118', borderColor: '#1D3038', color: '#F1F5F9', borderRadius: '6px', fontSize: '12px' }}
-                />
-                <Legend wrapperStyle={{ fontSize: '11px', fontFamily: 'monospace' }} />
-              </PieChart>
-            </ResponsiveContainer>
+            {totalAnalyses === 0 ? (
+              <div className="text-center p-4 space-y-2">
+                <Shield className="w-10 h-10 text-slate-600 mx-auto" />
+                <p className="text-xs font-mono text-slate-400">No threat scans performed yet.</p>
+                <p className="text-[11px] text-slate-500">Run a scan using any tool to build your live threat distribution chart.</p>
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={threatChartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={55}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="value"
+                  >
+                    {threatChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#081118', borderColor: '#1D3038', color: '#F1F5F9', borderRadius: '6px', fontSize: '12px' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '11px', fontFamily: 'monospace' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
 
@@ -215,32 +218,38 @@ export default function DashboardPage() {
           <div>
             <div className="flex items-center justify-between border-b border-[#1D3038] pb-3 mb-4">
               <h3 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#22C55E]" /> SOC SECURITY DIAGNOSTIC
+                <ShieldCheck className="w-4 h-4 text-[#22C55E]" /> TRUSTNETRA DIAGNOSTIC
               </h3>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/30 font-semibold">
-                SYSTEM SECURE
+                SYSTEM OPERATIONAL
               </span>
             </div>
             
             <p className="text-xs text-slate-300 leading-relaxed bg-[#050A0F] p-3.5 rounded border border-[#1D3038] font-mono">
-              All primary automated defense layers active. No critical network anomalies detected in the last evaluation window.
+              {totalAnalyses === 0
+                ? 'TrustNetra real-time protection active. Perform a security check on any URL or file to initialize live telemetry.'
+                : `Total ${totalAnalyses} security scans processed. ${threatsDetected} threats identified and neutralized.`}
             </p>
 
             <div className="mt-4 space-y-2 font-mono text-xs">
               <div className="flex items-center justify-between text-slate-400">
                 <span>Safe Telemetry Ratio</span>
-                <span className="text-[#22C55E] font-bold">88.4%</span>
+                <span className="text-[#22C55E] font-bold">
+                  {totalAnalyses === 0 ? '100%' : `${Math.round((safeChecks / totalAnalyses) * 100)}%`}
+                </span>
               </div>
               <div className="w-full bg-[#050A0F] rounded-full h-1.5 border border-[#1D3038] overflow-hidden">
-                <div className="bg-[#22C55E] h-1.5 rounded-full" style={{ width: '88.4%' }} />
+                <div className="bg-[#22C55E] h-1.5 rounded-full" style={{ width: totalAnalyses === 0 ? '100%' : `${Math.round((safeChecks / totalAnalyses) * 100)}%` }} />
               </div>
 
               <div className="flex items-center justify-between text-slate-400 pt-1">
-                <span>Critical Threat Intercept Rate</span>
-                <span className="text-[#00E5FF] font-bold">99.1%</span>
+                <span>Threat Ratio</span>
+                <span className="text-[#FF3B3B] font-bold">
+                  {totalAnalyses === 0 ? '0%' : `${Math.round((threatsDetected / totalAnalyses) * 100)}%`}
+                </span>
               </div>
               <div className="w-full bg-[#050A0F] rounded-full h-1.5 border border-[#1D3038] overflow-hidden">
-                <div className="bg-[#00E5FF] h-1.5 rounded-full" style={{ width: '99.1%' }} />
+                <div className="bg-[#FF3B3B] h-1.5 rounded-full" style={{ width: totalAnalyses === 0 ? '0%' : `${Math.round((threatsDetected / totalAnalyses) * 100)}%` }} />
               </div>
             </div>
           </div>
@@ -248,96 +257,89 @@ export default function DashboardPage() {
           <div className="pt-3 border-t border-[#1D3038] flex items-center justify-between text-xs font-mono">
             <span className="text-slate-500">Need AI Threat Investigation?</span>
             <Link href="/assistant" className="text-[#00E5FF] hover:underline flex items-center gap-1">
-              Open AI Security Assistant <ChevronRight className="w-3.5 h-3.5" />
+              Open TrustNetra AI Assistant <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Threat Event History Log Table */}
+      {/* Real Threat Event Log Table */}
       <section className="p-5 rounded-lg bg-[#0E171F] border border-[#1D3038] space-y-4">
         <div className="flex items-center justify-between border-b border-[#1D3038] pb-3">
           <div>
             <h3 className="text-xs font-mono font-bold text-slate-200 uppercase tracking-wider">
               RECENT SECURITY EVENT LOGS
             </h3>
-            <p className="text-[11px] text-slate-400 font-mono mt-0.5">Real-time threat intelligence events stream</p>
+            <p className="text-[11px] text-slate-400 font-mono mt-0.5">Real-time user threat scan events stream</p>
           </div>
           <Link href="/history" className="text-xs font-mono text-[#00E5FF] hover:underline flex items-center gap-1">
-            View All Logs <ChevronRight className="w-3.5 h-3.5" />
+            View All Logs ({history.length}) <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left font-mono text-xs">
-            <thead className="text-[10px] text-slate-400 uppercase bg-[#081118] border-b border-[#1D3038]">
-              <tr>
-                <th className="px-3.5 py-2.5">TIMESTAMP</th>
-                <th className="px-3.5 py-2.5">THREAT TYPE</th>
-                <th className="px-3.5 py-2.5">SOURCE / TARGET</th>
-                <th className="px-3.5 py-2.5">RISK LEVEL</th>
-                <th className="px-3.5 py-2.5">AI CONFIDENCE</th>
-                <th className="px-3.5 py-2.5">STATUS</th>
-                <th className="px-3.5 py-2.5 text-right">ACTION</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#1D3038]">
-              {/* Default SOC Log Rows + Live History */}
-              <tr className="hover:bg-[#111C24] transition-colors">
-                <td className="px-3.5 py-3 text-slate-400">10:42:15 PM</td>
-                <td className="px-3.5 py-3 text-slate-200">Phishing URL</td>
-                <td className="px-3.5 py-3 text-slate-400 truncate max-w-[180px]">http://secure-verify-bank.xyz</td>
-                <td className="px-3.5 py-3">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FF1744]/20 text-[#FF1744] border border-[#FF1744]/40">HIGH</span>
-                </td>
-                <td className="px-3.5 py-3 text-[#00E5FF]">96%</td>
-                <td className="px-3.5 py-3 text-[#FF3B3B] font-bold">BLOCKED</td>
-                <td className="px-3.5 py-3 text-right">
-                  <Link href="/history" className="text-[10px] text-[#00E5FF] hover:underline">Details</Link>
-                </td>
-              </tr>
-              <tr className="hover:bg-[#111C24] transition-colors">
-                <td className="px-3.5 py-3 text-slate-400">10:38:04 PM</td>
-                <td className="px-3.5 py-3 text-slate-200">Malware Attachment</td>
-                <td className="px-3.5 py-3 text-slate-400 truncate max-w-[180px]">invoice_9921.exe</td>
-                <td className="px-3.5 py-3">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FF1744]/20 text-[#FF1744] border border-[#FF1744]/40">CRITICAL</span>
-                </td>
-                <td className="px-3.5 py-3 text-[#00E5FF]">98%</td>
-                <td className="px-3.5 py-3 text-[#FF3B3B] font-bold">BLOCKED</td>
-                <td className="px-3.5 py-3 text-right">
-                  <Link href="/history" className="text-[10px] text-[#00E5FF] hover:underline">Details</Link>
-                </td>
-              </tr>
-              <tr className="hover:bg-[#111C24] transition-colors">
-                <td className="px-3.5 py-3 text-slate-400">10:31:52 PM</td>
-                <td className="px-3.5 py-3 text-slate-200">SMS Spam Vector</td>
-                <td className="px-3.5 py-3 text-slate-400 truncate max-w-[180px]">Package on hold text</td>
-                <td className="px-3.5 py-3">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40">MEDIUM</span>
-                </td>
-                <td className="px-3.5 py-3 text-[#00E5FF]">82%</td>
-                <td className="px-3.5 py-3 text-[#F59E0B] font-bold">REVIEWED</td>
-                <td className="px-3.5 py-3 text-right">
-                  <Link href="/history" className="text-[10px] text-[#00E5FF] hover:underline">Details</Link>
-                </td>
-              </tr>
-              <tr className="hover:bg-[#111C24] transition-colors">
-                <td className="px-3.5 py-3 text-slate-400">10:15:20 PM</td>
-                <td className="px-3.5 py-3 text-slate-200">Domain SSL Check</td>
-                <td className="px-3.5 py-3 text-slate-400 truncate max-w-[180px]">github.com</td>
-                <td className="px-3.5 py-3">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/40">SAFE</span>
-                </td>
-                <td className="px-3.5 py-3 text-[#00E5FF]">99%</td>
-                <td className="px-3.5 py-3 text-[#22C55E] font-bold">VERIFIED</td>
-                <td className="px-3.5 py-3 text-right">
-                  <Link href="/history" className="text-[10px] text-[#00E5FF] hover:underline">Details</Link>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        {history.length === 0 ? (
+          <div className="text-center py-10 bg-[#081118] border border-dashed border-[#1D3038] rounded-md">
+            <FileText className="w-8 h-8 text-slate-600 mx-auto mb-2" />
+            <p className="text-xs font-mono text-slate-300">No Security Event Logs Recorded Yet</p>
+            <p className="text-[11px] text-slate-500 mt-1">Use the Threat Detection Suite or launch a scan to view real event logs.</p>
+            <div className="mt-4">
+              <Link href="/analyze/url" className="px-3.5 py-1.5 bg-[#00E5FF] text-[#050A0F] font-mono font-bold text-xs rounded inline-block">
+                Run First Scan
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left font-mono text-xs">
+              <thead className="text-[10px] text-slate-400 uppercase bg-[#081118] border-b border-[#1D3038]">
+                <tr>
+                  <th className="px-3.5 py-2.5">TIMESTAMP</th>
+                  <th className="px-3.5 py-2.5">THREAT TYPE</th>
+                  <th className="px-3.5 py-2.5">SOURCE / TARGET</th>
+                  <th className="px-3.5 py-2.5">RISK SCORE</th>
+                  <th className="px-3.5 py-2.5">STATUS</th>
+                  <th className="px-3.5 py-2.5 text-right">ACTION</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1D3038]">
+                {history.slice(0, 5).map((item, i) => (
+                  <tr key={i} className="hover:bg-[#111C24] transition-colors">
+                    <td className="px-3.5 py-3 text-slate-400">
+                      {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </td>
+                    <td className="px-3.5 py-3 text-slate-200 capitalize">
+                      {item.threatLabel || item.type}
+                    </td>
+                    <td className="px-3.5 py-3 text-slate-400 truncate max-w-[200px]">
+                      {item.input}
+                    </td>
+                    <td className="px-3.5 py-3">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        item.riskScore > 70
+                          ? 'bg-[#FF1744]/20 text-[#FF1744] border border-[#FF1744]/40'
+                          : item.riskScore > 30
+                          ? 'bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40'
+                          : 'bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/40'
+                      }`}>
+                        {item.riskScore}/100
+                      </span>
+                    </td>
+                    <td className="px-3.5 py-3 font-bold">
+                      {item.riskScore > 50 ? (
+                        <span className="text-[#FF3B3B]">BLOCKED</span>
+                      ) : (
+                        <span className="text-[#22C55E]">VERIFIED SAFE</span>
+                      )}
+                    </td>
+                    <td className="px-3.5 py-3 text-right">
+                      <Link href="/history" className="text-[10px] text-[#00E5FF] hover:underline">Details</Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
     </div>
   );

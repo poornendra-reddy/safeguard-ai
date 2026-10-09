@@ -7,7 +7,7 @@ import DynamicBackground from '@/components/layout/DynamicBackground';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'SafeGuard AI — Detect. Understand. Stay Safe.',
+  title: 'TrustNetra — Detect. Understand. Stay Safe.',
   description: 'AI-powered protection against phishing, fake links, malicious websites, and online scams.',
 };
 

@@ -124,7 +124,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-2xl relative z-10 flex flex-col items-center mb-8">
         <div className="flex items-center gap-3 mb-10">
           <Shield className="w-10 h-10 text-cyan-500" />
-          <span className="text-3xl font-bold">SafeGuard AI</span>
+          <span className="text-3xl font-bold">TrustNetra</span>
         </div>
 
         {/* Progress Tracker */}

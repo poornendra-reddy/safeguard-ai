@@ -52,7 +52,7 @@ export default function ReportPage() {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: 'SafeGuard AI Security Report',
+        title: 'TrustNetra Security Report',
         text: `Security analysis report - Risk Score: ${result?.riskScore}/100`,
         url: window.location.href,
       });
@@ -119,7 +119,7 @@ export default function ReportPage() {
             <Shield className="w-6 h-6 text-cyan-500" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">SAFEGUARD AI SECURITY REPORT</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">TRUSTNETRA SECURITY REPORT</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">Comprehensive Threat Analysis</p>
           </div>
         </div>
@@ -306,7 +306,7 @@ export default function ReportPage() {
         className="text-center text-xs text-gray-400 dark:text-gray-500 py-4"
       >
         <p>AI analysis provides risk indicators and should not be considered an absolute guarantee that content is safe or malicious.</p>
-        <p className="mt-1">SafeGuard AI &mdash; Detect. Understand. Stay Safe.</p>
+        <p className="mt-1">TrustNetra &mdash; Detect. Understand. Stay Safe.</p>
       </motion.div>
     </div>
   );

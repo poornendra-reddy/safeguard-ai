@@ -209,7 +209,7 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800">
                 <div>
                   <h3 className="font-medium text-gray-900 dark:text-white">Share Anonymous Data</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Help us improve SafeGuard AI by sharing anonymous usage data.</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Help us improve TrustNetra by sharing anonymous usage data.</p>
                 </div>
                 <button 
                   onClick={() => setPrivacy({ ...privacy, shareData: !privacy.shareData })}

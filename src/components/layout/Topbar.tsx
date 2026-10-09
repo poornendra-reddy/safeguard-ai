@@ -95,7 +95,7 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
                   >
                     <div className="px-4 py-2.5 border-b border-[#1D3038] mb-1">
                       <p className="text-xs font-semibold text-slate-100 truncate">{user?.name || 'SOC Operator'}</p>
-                      <p className="text-[10px] font-mono text-[#00E5FF] truncate">{user?.email || 'operator@safeguard.ai'}</p>
+                      <p className="text-[10px] font-mono text-[#00E5FF] truncate">{user?.email || 'operator@trustnetra.ai'}</p>
                     </div>
                     
                     <Link
