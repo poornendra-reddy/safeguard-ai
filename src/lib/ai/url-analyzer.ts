@@ -1,5 +1,5 @@
 // ============================================================
-// SafeGuard AI — URL Analyzer (Demo Engine)
+// TrustNetra — URL Analyzer Engine
 // ============================================================
 
 import { AnalysisResult, ThreatIndicator, URLAnalysisDetails } from '@/types';
@@ -172,7 +172,7 @@ export function analyzeURL(url: string): AnalysisResult {
     recommendations: [
       recommendedAction,
       isHttps ? 'Verify the website certificate and owner' : 'Never enter passwords or personal details over HTTP',
-      'Report suspicious links to SafeGuard AI threat database'
+      'Report suspicious links to TrustNetra threat database'
     ],
     entities: [domain, isHttps ? 'HTTPS' : 'HTTP'],
     domain,

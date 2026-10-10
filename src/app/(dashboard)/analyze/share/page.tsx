@@ -14,7 +14,7 @@ export default function SecureFileSharePage() {
   const handleShare = () => {
     if (!file) return;
     const fakeId = Math.random().toString(36).substring(2, 9);
-    const generated = `https://safeguard-ai-wru7.vercel.app/share/${fakeId}?exp=${expiry}&enc=aes256`;
+    const generated = `https://trustnetra.vercel.app/share/${fakeId}?exp=${expiry}&enc=aes256`;
     setShareLink(generated);
   };
 

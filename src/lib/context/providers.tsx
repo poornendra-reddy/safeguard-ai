@@ -1,6 +1,6 @@
 'use client';
 // ============================================================
-// SafeGuard AI — Theme, Auth, Notification Context Providers
+// TrustNetra — Theme, Auth, Notification Context Providers
 // ============================================================
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
