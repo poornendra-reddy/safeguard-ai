@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { MessageSquareX, AlertTriangle, CheckCircle, Search, ShieldCheck } from 'lucide-react';
+import { MessageSquareX, AlertTriangle, CheckCircle, Search, ShieldCheck, History, ArrowRight, Sparkles } from 'lucide-react';
 import { useHistory } from '@/lib/context/providers';
 import { analyzeCyberbullying } from '@/lib/ai/cyberbullying-analyzer';
+import { safeguardAPI } from '@/lib/api-client';
 import { AnalysisResult } from '@/types';
 
 export default function CyberbullyingDetectorPage() {
@@ -12,24 +14,39 @@ export default function CyberbullyingDetectorPage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const { addToHistory } = useHistory();
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!text.trim()) return;
-    const res = analyzeCyberbullying(text);
+    let res: AnalysisResult | null = null;
+    try {
+      res = await safeguardAPI.scanCyberbullying(text.trim());
+    } catch (err: any) {
+      console.warn('Backend cyberbullying scan notice, using local engine fallback:', err?.message);
+      res = analyzeCyberbullying(text);
+    }
     setResult(res);
-
     addToHistory(res);
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="p-3 bg-pink-500/20 rounded-xl">
-          <MessageSquareX className="w-6 h-6 text-pink-400" />
+    <div className="max-w-4xl mx-auto space-y-8 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="p-3 bg-pink-500/20 rounded-xl">
+            <MessageSquareX className="w-6 h-6 text-pink-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cyberbullying & Harassment Detector</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-mono">Classify abusive, threatening, or toxic comments while preserving safe disagreements.</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cyberbullying & Harassment Detector</h1>
-          <p className="text-gray-500 dark:text-gray-400">Classify abusive, threatening, or toxic comments while preserving safe disagreements.</p>
-        </div>
+
+        <Link
+          href="/history"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 transition-all"
+        >
+          <History className="w-4 h-4" />
+          <span>View Scan History</span>
+        </Link>
       </div>
 
       <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
@@ -54,16 +71,22 @@ export default function CyberbullyingDetectorPage() {
             <Search className="w-5 h-5" /> Analyze Text Toxicity
           </button>
           <button
-            onClick={() => {
+            onClick={async () => {
               const sampleToxicText = 'You are worthless and nobody likes you. Stop posting or we will target you every day.';
               setText(sampleToxicText);
-              const res = analyzeCyberbullying(sampleToxicText);
+              let res: AnalysisResult | null = null;
+              try {
+                res = await safeguardAPI.scanCyberbullying(sampleToxicText);
+              } catch {
+                res = analyzeCyberbullying(sampleToxicText);
+              }
               setResult(res);
               addToHistory(res);
             }}
             className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
           >
-            TRY EXAMPLE
+            <Sparkles className="w-4 h-4 text-[#00E5FF]" />
+            <span>Example</span>
           </button>
         </div>
 
@@ -91,8 +114,25 @@ export default function CyberbullyingDetectorPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-pink-500/10 border border-pink-500/20 text-sm text-pink-300">
+            <div className="p-4 rounded-xl bg-pink-500/10 border border-pink-500/20 text-sm text-pink-300 font-mono text-xs">
               <strong>Recommended Safety Action:</strong> {result.recommendedAction}
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#1D3038]">
+              <Link
+                href="/history"
+                className="px-4 py-2 bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 rounded-xl transition-all flex items-center gap-1.5"
+              >
+                <History className="w-3.5 h-3.5" />
+                <span>View Threat History Logs</span>
+              </Link>
+              <Link
+                href={`/report/${result.id || 'current'}`}
+                className="px-4 py-2 bg-white hover:bg-slate-200 text-slate-950 font-mono text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
+              >
+                <span>View Full Report</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </motion.div>
         )}

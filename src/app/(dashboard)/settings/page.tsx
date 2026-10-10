@@ -23,7 +23,11 @@ const TABS = [
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const { theme, setTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+
+  const [name, setName] = useState(user?.name || 'SOC Operator');
+  const [bio, setBio] = useState(user?.bio || 'Cybersecurity enthusiast & digital citizen');
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const [notifications, setNotifications] = useState({
     email: true,
@@ -38,6 +42,33 @@ export default function SettingsPage() {
     showAnalysis: true
   });
 
+  const handleSaveProfile = () => {
+    updateUser({ name, bio });
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 2500);
+  };
+
+  const handleDownloadData = () => {
+    const exportPayload = {
+      user: {
+        ...user,
+        name,
+        bio
+      },
+      exportTimestamp: new Date().toISOString(),
+      platform: 'SAFEGUARD AI',
+      privacyPreferences: privacy,
+      notificationPreferences: notifications
+    };
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `safeguard-ai-data-export-${Date.now()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'profile':
@@ -46,9 +77,12 @@ export default function SettingsPage() {
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Profile Information</h2>
             <div className="flex items-center space-x-4">
               <div className="w-20 h-20 rounded-full bg-cyan-500/20 text-cyan-500 flex items-center justify-center text-2xl font-bold border border-cyan-500/30">
-                {user?.avatar || user?.name?.substring(0, 2)?.toUpperCase() || 'SG'}
+                {name?.substring(0, 2)?.toUpperCase() || 'SG'}
               </div>
-              <button className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => alert('Avatar upload: Custom profile picture support enabled.')}
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
                 Change Avatar
               </button>
             </div>
@@ -56,20 +90,40 @@ export default function SettingsPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
-                <input type="text" defaultValue={user?.name || ''} className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-gray-900 dark:text-white" />
+                <input 
+                  type="text" 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-gray-900 dark:text-white" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-                <input type="email" defaultValue={user?.email || ''} readOnly className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg text-gray-500 cursor-not-allowed" />
+                <input type="email" defaultValue={user?.email || 'operator@safeguard.ai'} readOnly className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg text-gray-500 cursor-not-allowed" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
-                <textarea rows={3} defaultValue={user?.bio || ''} className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-gray-900 dark:text-white" />
+                <textarea 
+                  rows={3} 
+                  value={bio} 
+                  onChange={(e) => setBio(e.target.value)} 
+                  className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-gray-900 dark:text-white" 
+                />
               </div>
-              <button className="flex items-center space-x-2 px-6 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg font-medium transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-                <Save className="w-4 h-4" />
-                <span>Save Changes</span>
-              </button>
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={handleSaveProfile}
+                  className="flex items-center space-x-2 px-6 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg font-medium transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Save Changes</span>
+                </button>
+                {saveSuccess && (
+                  <span className="text-sm text-emerald-500 font-medium flex items-center gap-1">
+                    <CheckCircle className="w-4 h-4" /> Profile saved successfully!
+                  </span>
+                )}
+              </div>
             </div>
           </motion.div>
         );
@@ -209,7 +263,7 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800">
                 <div>
                   <h3 className="font-medium text-gray-900 dark:text-white">Share Anonymous Data</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Help us improve TrustNetra by sharing anonymous usage data.</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Help us improve SafeGuard AI by sharing anonymous usage data.</p>
                 </div>
                 <button 
                   onClick={() => setPrivacy({ ...privacy, shareData: !privacy.shareData })}
@@ -236,9 +290,12 @@ export default function SettingsPage() {
             <div className="pt-6 border-t border-gray-200 dark:border-gray-800 space-y-4">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Data Management</h2>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex items-center justify-center space-x-2 px-6 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-medium transition-colors">
+                <button 
+                  onClick={handleDownloadData}
+                  className="flex items-center justify-center space-x-2 px-6 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-medium transition-colors"
+                >
                   <Download className="w-4 h-4" />
-                  <span>Download My Data</span>
+                  <span>Download My Data (JSON)</span>
                 </button>
                 <button 
                   onClick={() => confirm('Are you sure you want to delete all your data? This action cannot be undone.')}

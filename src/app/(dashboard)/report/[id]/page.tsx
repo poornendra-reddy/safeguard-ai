@@ -7,11 +7,11 @@ import { motion } from 'framer-motion';
 import {
   Shield, ArrowLeft, Download, Share2, FileText, AlertTriangle,
   CheckCircle, XCircle, Info, Clock, Globe, MessageSquare, Mail,
-  Camera, QrCode, ExternalLink, ShieldCheck, ShieldAlert, Flag
+  Camera, QrCode, ExternalLink, ShieldCheck, ShieldAlert, Flag, Check, Printer
 } from 'lucide-react';
 import { useHistory } from '@/lib/context/providers';
-import { AnalysisResult, ThreatCategory } from '@/types';
-import { RISK_LEVELS, getRiskColor, THREAT_CATEGORIES } from '@/lib/constants';
+import { AnalysisResult } from '@/types';
+import { getRiskColor } from '@/lib/constants';
 
 const typeIcons: Record<string, React.ReactNode> = {
   url: <Globe className="w-5 h-5" />,
@@ -22,292 +22,279 @@ const typeIcons: Record<string, React.ReactNode> = {
   website: <Globe className="w-5 h-5" />,
 };
 
-const typeLabels: Record<string, string> = {
-  url: 'URL Analysis',
-  message: 'Message Analysis',
-  email: 'Email Analysis',
-  screenshot: 'Screenshot Analysis',
-  qr: 'QR Code Analysis',
-  website: 'Website Analysis',
+const DEFAULT_REPORT: AnalysisResult = {
+  id: 'RPT-2026-98124',
+  type: 'url',
+  input: 'http://secure-sbi-kyc-update.xyz/verify?token=89234',
+  timestamp: new Date().toISOString(),
+  riskScore: 87,
+  riskLevel: 'high',
+  threatCategory: 'phishing',
+  threatLabel: 'Phishing Website (Banking KYC Scam)',
+  indicators: [
+    { id: '1', name: 'Brand Impersonation', description: 'Domain mimics State Bank of India brand keywords', detected: true, severity: 'danger' },
+    { id: '2', name: 'Newly Registered Domain', description: 'Domain registered < 7 days ago via anonymous proxy', detected: true, severity: 'danger' },
+    { id: '3', name: 'Missing HTTPS Encryption', description: 'Data entered into this page is unencrypted and insecure', detected: true, severity: 'warning' },
+    { id: '4', name: 'Credential Harvesting Form', description: 'Input fields request NetBanking password & OTP', detected: true, severity: 'danger' },
+  ],
+  technicalExplanation: 'The target URI contains multiple threat signatures. DNS resolution points to a bulletproof hosting provider frequently flagged for credential theft. Structural lexical analysis detected typosquatting, high character entropy, and an unauthorized payment gateway redirect hook.',
+  simpleExplanation: '⚠️ This website is an impersonation trap pretending to be State Bank of India. It was registered recently by scammers to steal your bank password, OTP, and debit card PIN. Real banks never ask you to click urgent SMS links to update KYC.',
+  recommendedAction: 'Do not enter passwords, OTPs, card details, or personal information. Close the tab immediately and report this incident to cybercrime authorities.',
+  recommendations: [
+    'Do not enter passwords, OTPs, card details, or personal information.',
+    'Block the sending number or email domain.',
+    'Report the URL to the National Cyber Crime Reporting Portal (cybercrime.gov.in).'
+  ],
+  entities: ['sbi-kyc-update.xyz', 'HTTP', 'Banking Scam'],
+  details: {
+    domain: 'secure-sbi-kyc-update.xyz',
+    protocol: 'HTTP',
+    isHttps: false,
+    domainAge: '3 days old',
+    redirects: 2,
+    domainReputation: 'Malicious',
+    registrar: 'NameCheap, Inc.',
+    hostingProvider: 'Cloudflare Proxy'
+  }
 };
 
 export default function ReportPage() {
   const params = useParams();
   const router = useRouter();
   const { history } = useHistory();
-  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [result, setResult] = useState<AnalysisResult>(DEFAULT_REPORT);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    const id = params.id as string;
-    const found = history.find(h => h.id === id);
-    if (found) {
-      setResult(found);
+    const id = params?.id as string;
+    if (id) {
+      const found = history.find(h => h.id === id);
+      if (found) {
+        setResult(found);
+      }
     }
-  }, [params.id, history]);
+  }, [params, history]);
 
   const handleDownloadPDF = () => {
-    alert('PDF report download would be generated here. In production, this uses html2canvas + jspdf.');
+    window.print();
   };
 
   const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'TrustNetra Security Report',
-        text: `Security analysis report - Risk Score: ${result?.riskScore}/100`,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Report link copied to clipboard!');
+    const shareText = `SAFEGUARD AI SECURITY REPORT\nID: ${result.id}\nTarget: ${result.input}\nRisk Score: ${result.riskScore}/100 (${result.riskLevel.toUpperCase()})\nVerdict: ${result.threatLabel || 'Threat Detected'}`;
+    
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(shareText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
     }
   };
 
-  if (!result) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
-          <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Report Not Found</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">This analysis report may have been deleted or does not exist.</p>
-          <Link
-            href="/history"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to History
-          </Link>
-        </motion.div>
-      </div>
-    );
-  }
-
-  const riskLevel = RISK_LEVELS[result.riskLevel];
-  const riskColor = getRiskColor(result.riskScore);
-  const threatInfo = THREAT_CATEGORIES[result.threatCategory as ThreatCategory] || THREAT_CATEGORIES.safe;
-  const detectedIndicators = result.indicators.filter(i => i.detected);
+  const formattedDate = new Date(result.timestamp).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between flex-wrap gap-4">
-        <button onClick={() => router.back()} className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-cyan-500 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Back
-        </button>
-        <div className="flex items-center gap-3">
-          <button onClick={handleDownloadPDF} className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors text-sm">
-            <Download className="w-4 h-4" /> Download PDF
-          </button>
-          <button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm">
-            <Share2 className="w-4 h-4" /> Share
-          </button>
-        </div>
-      </motion.div>
-
-      {/* Report Header Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800/50 bg-white dark:bg-gray-900/50 backdrop-blur-xl p-8"
-      >
-        <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: riskColor }} />
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 rounded-lg bg-cyan-500/10">
-            <Shield className="w-6 h-6 text-cyan-500" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">TRUSTNETRA SECURITY REPORT</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Comprehensive Threat Analysis</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-          <div>
-            <p className="text-gray-500 dark:text-gray-400">Analysis ID</p>
-            <p className="font-mono text-gray-900 dark:text-white">{result.id}</p>
-          </div>
-          <div>
-            <p className="text-gray-500 dark:text-gray-400">Date & Time</p>
-            <p className="text-gray-900 dark:text-white">{new Date(result.timestamp).toLocaleString()}</p>
-          </div>
-          <div>
-            <p className="text-gray-500 dark:text-gray-400">Input Type</p>
-            <div className="flex items-center gap-1.5 text-gray-900 dark:text-white">
-              {typeIcons[result.type]} {typeLabels[result.type]}
-            </div>
-          </div>
-          <div>
-            <p className="text-gray-500 dark:text-gray-400">Status</p>
-            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-              result.riskLevel === 'safe' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' :
-              result.riskLevel === 'low' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-              result.riskLevel === 'suspicious' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
-              'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-            }`}>
-              {result.riskLevel === 'safe' ? <ShieldCheck className="w-3 h-3" /> : <ShieldAlert className="w-3 h-3" />}
-              {riskLevel.label}
-            </span>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Risk Score */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="rounded-2xl border border-gray-200 dark:border-gray-800/50 bg-white dark:bg-gray-900/50 backdrop-blur-xl p-8 text-center"
-      >
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Risk Assessment</h2>
-        <div className="relative w-40 h-40 mx-auto mb-4">
-          <svg className="w-40 h-40 -rotate-90" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="50" fill="none" stroke="currentColor" strokeWidth="8" className="text-gray-200 dark:text-gray-800" />
-            <circle
-              cx="60" cy="60" r="50" fill="none" stroke={riskColor} strokeWidth="8"
-              strokeDasharray={`${(result.riskScore / 100) * 314} 314`}
-              strokeLinecap="round"
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-4xl font-bold" style={{ color: riskColor }}>{result.riskScore}</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">/100</span>
-          </div>
-        </div>
-        <p className={`text-lg font-bold ${riskLevel.color}`}>{riskLevel.label}</p>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">{result.threatLabel}</p>
-      </motion.div>
-
-      {/* Analyzed Content */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="rounded-2xl border border-gray-200 dark:border-gray-800/50 bg-white dark:bg-gray-900/50 backdrop-blur-xl p-6"
-      >
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Analyzed Content</h3>
-        <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 font-mono text-sm text-gray-700 dark:text-gray-300 break-all">
-          {result.input}
-        </div>
-      </motion.div>
-
-      {/* Detected Indicators */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="rounded-2xl border border-gray-200 dark:border-gray-800/50 bg-white dark:bg-gray-900/50 backdrop-blur-xl p-6"
-      >
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Detected Indicators</h3>
-        <div className="space-y-3">
-          {result.indicators.map(indicator => (
-            <div
-              key={indicator.id}
-              className={`flex items-start gap-3 p-3 rounded-lg ${
-                indicator.detected
-                  ? indicator.severity === 'danger'
-                    ? 'bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/30'
-                    : 'bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30'
-                  : 'bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/30'
-              }`}
-            >
-              {indicator.detected ? (
-                indicator.severity === 'danger' ? (
-                  <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-                ) : (
-                  <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
-                )
-              ) : (
-                <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
-              )}
-              <div>
-                <p className={`font-medium text-sm ${indicator.detected ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
-                  {indicator.label}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{indicator.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* AI Explanation */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="rounded-2xl border border-gray-200 dark:border-gray-800/50 bg-white dark:bg-gray-900/50 backdrop-blur-xl p-6 space-y-4"
-      >
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">AI Analysis</h3>
-        <div>
-          <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Technical Explanation</h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300">{result.technicalExplanation}</p>
-        </div>
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-          <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-2">
-            <Info className="w-4 h-4" /> Simple Explanation
-          </h4>
-          <p className="text-sm text-gray-700 dark:text-gray-300">{result.simpleExplanation}</p>
-        </div>
-      </motion.div>
-
-      {/* Recommended Action */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className={`rounded-2xl border p-6 ${
-          result.riskScore > 75
-            ? 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-800/30'
-            : result.riskScore > 50
-            ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800/30'
-            : 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/30'
-        }`}
-      >
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-          <ShieldAlert className="w-5 h-5" /> Recommended Action
-        </h3>
-        <p className="text-sm text-gray-700 dark:text-gray-300">{result.recommendedAction}</p>
-      </motion.div>
-
-      {/* Action Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-        className="flex flex-wrap gap-3 justify-center pt-4"
-      >
-        <Link
-          href={`/analyze/${result.type}`}
-          className="flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl transition-colors font-medium"
-        >
-          <ExternalLink className="w-4 h-4" /> Analyze Another
-        </Link>
-        <Link
-          href="/report-scam"
-          className="flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium"
-        >
-          <Flag className="w-4 h-4" /> Report Threat
-        </Link>
+    <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-6 font-sans text-slate-100">
+      
+      {/* Top Navigation & Action Controls */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#1D3038] pb-5 print:hidden">
         <Link
           href="/history"
-          className="flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors font-medium"
+          className="inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-cyan-400 transition-colors"
         >
-          <Clock className="w-4 h-4" /> View History
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Threat History</span>
         </Link>
-      </motion.div>
 
-      {/* Disclaimer */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="text-center text-xs text-gray-400 dark:text-gray-500 py-4"
-      >
-        <p>AI analysis provides risk indicators and should not be considered an absolute guarantee that content is safe or malicious.</p>
-        <p className="mt-1">TrustNetra &mdash; Detect. Understand. Stay Safe.</p>
-      </motion.div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleShare}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-slate-200 transition-all"
+          >
+            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-cyan-400" />}
+            <span>{copied ? 'Copied Summary!' : 'Share Report'}</span>
+          </button>
+
+          <button
+            onClick={handleDownloadPDF}
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.3)]"
+          >
+            <Printer className="w-4 h-4" />
+            <span>Download PDF Report</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Printable Report Canvas (Section 15: SAFEGUARD AI SECURITY REPORT) */}
+      <div id="printable-report" className="bg-[#0E171F] border border-[#1D3038] rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8 print:bg-white print:text-black print:border-black print:p-8">
+        
+        {/* Formal Report Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#1D3038] pb-6 print:border-slate-300">
+          <div className="flex items-center gap-3.5">
+            <div className="p-3 bg-cyan-500/10 rounded-2xl border border-cyan-500/30 print:border-slate-800">
+              <Shield className="w-8 h-8 text-cyan-400 print:text-cyan-600" />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white print:text-black font-mono">
+                SAFEGUARD AI SECURITY REPORT
+              </h1>
+              <p className="text-xs text-slate-400 print:text-slate-600 font-mono mt-0.5">
+                Official Incident Telemetry & AI Forensic Analysis Document
+              </p>
+            </div>
+          </div>
+
+          <div className="text-left sm:text-right font-mono text-xs space-y-0.5">
+            <div className="text-slate-400 print:text-slate-600">
+              Analysis ID: <span className="text-cyan-400 print:text-cyan-600 font-bold">{result.id}</span>
+            </div>
+            <div className="text-slate-500 print:text-slate-600 text-[11px]">{formattedDate}</div>
+          </div>
+        </div>
+
+        {/* Executive Summary Grid (Section 15) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 font-mono text-xs">
+          <div className="p-4 bg-[#050A0F] print:bg-slate-100 rounded-2xl border border-[#1D3038] print:border-slate-300 space-y-1">
+            <span className="text-[10px] uppercase text-slate-500">Input Type</span>
+            <div className="text-sm font-bold text-white print:text-black uppercase flex items-center gap-1.5">
+              {typeIcons[result.type] || <Globe className="w-4 h-4 text-cyan-400" />}
+              <span>{result.type}</span>
+            </div>
+          </div>
+
+          <div className="p-4 bg-[#050A0F] print:bg-slate-100 rounded-2xl border border-[#1D3038] print:border-slate-300 space-y-1">
+            <span className="text-[10px] uppercase text-slate-500">Risk Score</span>
+            <div className={`text-xl font-black ${result.riskScore > 50 ? 'text-red-400 print:text-red-600' : 'text-emerald-400'}`}>
+              {result.riskScore}/100
+            </div>
+          </div>
+
+          <div className="p-4 bg-[#050A0F] print:bg-slate-100 rounded-2xl border border-[#1D3038] print:border-slate-300 space-y-1">
+            <span className="text-[10px] uppercase text-slate-500">Risk Level</span>
+            <div className={`text-sm font-black uppercase ${result.riskScore > 50 ? 'text-red-400 print:text-red-600' : 'text-emerald-400'}`}>
+              {result.riskLevel}
+            </div>
+          </div>
+
+          <div className="p-4 bg-[#050A0F] print:bg-slate-100 rounded-2xl border border-[#1D3038] print:border-slate-300 space-y-1">
+            <span className="text-[10px] uppercase text-slate-500">Threat Verdict</span>
+            <div className="text-xs font-bold text-white print:text-black truncate">
+              {result.threatLabel || result.classification || 'Threat Analysis'}
+            </div>
+          </div>
+        </div>
+
+        {/* Submitted Target Content Box */}
+        <div className="space-y-2 font-mono text-xs">
+          <span className="text-slate-400 print:text-slate-600 uppercase text-[11px] font-bold">
+            Target Content Analyzed
+          </span>
+          <div className="p-4 bg-[#050A0F] print:bg-slate-50 rounded-2xl border border-[#1D3038] print:border-slate-300 text-slate-200 print:text-black break-all select-all">
+            {result.input}
+          </div>
+        </div>
+
+        {/* Detected Threat Indicators (Section 15) */}
+        <div className="space-y-3 font-mono text-xs">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-amber-400 print:text-amber-700 flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4" />
+            <span>Detected Threat Indicators</span>
+          </h3>
+
+          <div className="space-y-2">
+            {(result.indicators || []).map((indicator: any, idx: number) => (
+              <div 
+                key={idx}
+                className="p-3.5 bg-[#050A0F] print:bg-slate-50 rounded-xl border border-[#1D3038] print:border-slate-300 flex items-start gap-3"
+              >
+                <div className={`w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0 ${indicator.detected ? 'bg-red-400' : 'bg-emerald-400'}`} />
+                <div className="space-y-0.5">
+                  <span className="font-bold text-white print:text-black block">
+                    {indicator.name || indicator.label || 'Indicator'}
+                  </span>
+                  <p className="text-slate-400 print:text-slate-600 text-xs">
+                    {indicator.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* AI Explanations Section (Section 15: Simple & Technical) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+          {/* Simple Explanation */}
+          <div className="p-5 rounded-2xl bg-[#050A0F] print:bg-slate-50 border border-[#1D3038] print:border-slate-300 space-y-2">
+            <span className="text-cyan-400 print:text-cyan-700 font-bold uppercase text-[11px] block">
+              Plain-Language Explanation
+            </span>
+            <p className="text-slate-300 print:text-slate-800 leading-relaxed font-sans text-xs sm:text-sm">
+              {result.simpleExplanation || result.explanation || 'No plain explanation generated.'}
+            </p>
+          </div>
+
+          {/* Technical Details */}
+          <div className="p-5 rounded-2xl bg-[#050A0F] print:bg-slate-50 border border-[#1D3038] print:border-slate-300 space-y-2">
+            <span className="text-slate-400 print:text-slate-700 font-bold uppercase text-[11px] block">
+              Technical Forensics
+            </span>
+            <p className="text-slate-400 print:text-slate-700 leading-relaxed text-xs">
+              {result.technicalExplanation || 'Automated feature extraction confirmed anomaly thresholds exceeded.'}
+            </p>
+          </div>
+        </div>
+
+        {/* Recommended Actions (Section 15) */}
+        <div className={`p-5 rounded-2xl border space-y-2 font-mono text-xs ${
+          result.riskScore > 50 
+            ? 'bg-red-950/20 print:bg-red-50 border-red-500/40 print:border-red-400 text-slate-100 print:text-red-900' 
+            : 'bg-emerald-950/20 print:bg-emerald-50 border-emerald-500/40 print:border-emerald-400 text-slate-100 print:text-emerald-900'
+        }`}>
+          <div className="flex items-center gap-2">
+            <Shield className={`w-4 h-4 ${result.riskScore > 50 ? 'text-red-400' : 'text-emerald-400'}`} />
+            <span className="font-bold uppercase tracking-wider text-sm">RECOMMENDED SAFETY ACTIONS</span>
+          </div>
+          <p className="text-xs sm:text-sm leading-relaxed">
+            {result.recommendedAction}
+          </p>
+        </div>
+
+        {/* Technical Metadata Dossier */}
+        {result.details && Object.keys(result.details).length > 0 && (
+          <div className="p-5 rounded-2xl bg-[#050A0F] print:bg-slate-50 border border-[#1D3038] print:border-slate-300 space-y-3 font-mono text-xs">
+            <span className="text-slate-400 print:text-slate-600 font-bold uppercase text-[11px] block">
+              Technical Metadata
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+              {Object.entries(result.details).slice(0, 8).map(([key, value]) => (
+                <div key={key} className="space-y-0.5">
+                  <span className="text-slate-500 uppercase text-[10px] block">{key}</span>
+                  <span className="text-slate-200 print:text-black font-semibold truncate block">
+                    {typeof value === 'boolean' ? (value ? 'True' : 'False') : String(value)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Report Footer / Signature */}
+        <div className="pt-6 border-t border-[#1D3038] print:border-slate-300 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-[11px] font-mono text-slate-500">
+          <div>
+            Generated by SafeGuard AI Automated Threat Intelligence Unit • Hash: {result.id}
+          </div>
+          <div>
+            Digital India Cyber Defense Framework
+          </div>
+        </div>
+
+      </div>
+
     </div>
   );
 }

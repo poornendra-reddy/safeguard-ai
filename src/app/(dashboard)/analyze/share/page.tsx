@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Lock, Share2, ShieldCheck, Key, Clock, Copy, Download } from 'lucide-react';
+import { Lock, Share2, ShieldCheck, Key, Clock, Copy, Download, History, Sparkles } from 'lucide-react';
 
 export default function SecureFileSharePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -14,7 +15,7 @@ export default function SecureFileSharePage() {
   const handleShare = () => {
     if (!file) return;
     const fakeId = Math.random().toString(36).substring(2, 9);
-    const generated = `https://trustnetra.vercel.app/share/${fakeId}?exp=${expiry}&enc=aes256`;
+    const generated = `https://safeguard-ai.vercel.app/share/${fakeId}?exp=${expiry}&enc=aes256`;
     setShareLink(generated);
   };
 
@@ -25,15 +26,25 @@ export default function SecureFileSharePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="p-3 bg-teal-500/20 rounded-xl">
-          <Lock className="w-6 h-6 text-teal-400" />
+    <div className="max-w-4xl mx-auto space-y-8 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="p-3 bg-teal-500/20 rounded-xl">
+            <Lock className="w-6 h-6 text-teal-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Secure Encrypted File Sharing</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-mono">Share files securely with Client-Side Encryption, password access controls, & auto-expiration.</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Secure Encrypted File Sharing</h1>
-          <p className="text-gray-500 dark:text-gray-400">Share files securely with Client-Side Encryption, password access controls, & auto-expiration.</p>
-        </div>
+
+        <Link
+          href="/history"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 transition-all"
+        >
+          <History className="w-4 h-4" />
+          <span>View Scan History</span>
+        </Link>
       </div>
 
       <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
@@ -85,11 +96,12 @@ export default function SecureFileSharePage() {
               setFile(sampleFile);
               setPassphrase('SecureVault2026!');
               const fakeId = Math.random().toString(36).substring(2, 9);
-              setShareLink(`https://trustnetra-wru7.vercel.app/share/${fakeId}?exp=${expiry}&enc=aes256`);
+              setShareLink(`https://safeguard-ai.vercel.app/share/${fakeId}?exp=${expiry}&enc=aes256`);
             }}
             className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
           >
-            TRY EXAMPLE
+            <Sparkles className="w-4 h-4 text-[#00E5FF]" />
+            <span>Example</span>
           </button>
         </div>
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Menu, Search, Bell, ShieldCheck, Settings, LogOut, Activity } from 'lucide-react';
+import { Menu, Search, Bell, ShieldCheck, Settings, LogOut, Activity, History } from 'lucide-react';
 import { useAuth, useNotifications } from '@/lib/context/providers';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -54,6 +54,16 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
             </span>
           </div>
 
+          {/* 1-Click Threat History Audit Button */}
+          <Link
+            href="/history"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 transition-colors"
+            title="View Threat Audit History Logs"
+          >
+            <History className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden sm:inline font-semibold">History Logs</span>
+          </Link>
+
           <Link
             href="/notifications"
             className="p-2 text-slate-400 hover:text-[#00E5FF] hover:bg-[#0E171F] rounded-md border border-[#1D3038] transition-colors relative"
@@ -95,9 +105,18 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
                   >
                     <div className="px-4 py-2.5 border-b border-[#1D3038] mb-1">
                       <p className="text-xs font-semibold text-slate-100 truncate">{user?.name || 'SOC Operator'}</p>
-                      <p className="text-[10px] font-mono text-[#00E5FF] truncate">{user?.email || 'operator@trustnetra.ai'}</p>
+                      <p className="text-[10px] font-mono text-[#00E5FF] truncate">{user?.email || 'operator@safeguard.ai'}</p>
                     </div>
                     
+                    <Link
+                      href="/history"
+                      onClick={() => setShowDropdown(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-slate-300 hover:bg-[#111C24] hover:text-[#00E5FF] transition-colors"
+                    >
+                      <History className="w-3.5 h-3.5" />
+                      Threat History Logs
+                    </Link>
+
                     <Link
                       href="/settings"
                       onClick={() => setShowDropdown(false)}

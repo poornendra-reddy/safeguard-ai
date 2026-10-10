@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { KeyRound, Mail, ArrowLeft, Shield } from 'lucide-react';
+import { KeyRound, Mail, ArrowLeft, Shield, CheckCircle2 } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -15,61 +15,60 @@ export default function ForgotPasswordPage() {
     if (!email) return;
     
     setLoading(true);
-    // Simulate API call
     setTimeout(() => {
       setLoading(false);
       setIsSubmitted(true);
-    }, 1500);
+    }, 1000);
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 p-4">
-      {/* Background elements */}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#060D13] text-slate-100 p-4 font-sans relative">
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-cyan-500/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-emerald-500/10 blur-[120px] rounded-full" />
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-cyan-500/10 blur-[130px] rounded-full" />
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-3">
-            <Shield className="w-8 h-8 text-cyan-500" />
-            <span className="text-2xl font-bold">TrustNetra</span>
-          </div>
+      <div className="w-full max-w-md relative z-10 space-y-6">
+        <div className="flex justify-center">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="p-2 bg-cyan-500/10 rounded-xl border border-cyan-500/30">
+              <Shield className="w-7 h-7 text-cyan-400" />
+            </div>
+            <span className="text-2xl font-extrabold text-white">SAFEGUARD AI</span>
+          </Link>
         </div>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl"
+          className="bg-[#0E171F] border border-[#1D3038] rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6"
         >
           {!isSubmitted ? (
             <>
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-cyan-50 dark:bg-cyan-500/10 mb-6">
-                  <KeyRound className="w-8 h-8 text-cyan-600 dark:text-cyan-400" />
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#081118] border border-[#1D3038] mb-2 text-cyan-400">
+                  <KeyRound className="w-7 h-7" />
                 </div>
-                <h2 className="text-2xl font-bold mb-2">Forgot Password?</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  No worries, we'll send you reset instructions.
+                <h2 className="text-2xl font-bold text-white">Password Recovery</h2>
+                <p className="text-xs text-slate-400 font-mono">
+                  Enter your registered operator email to receive a secure recovery OTP link.
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email Address</label>
+                  <label className="block text-xs font-mono text-slate-300 mb-1.5 uppercase">Registered Email</label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail className="h-5 w-5 text-gray-400" />
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                      <Mail className="h-4 w-4 text-slate-500" />
                     </div>
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all dark:text-white"
-                      placeholder="name@company.com"
+                      className="w-full pl-10 pr-4 py-2.5 bg-[#050A0F] border border-[#1D3038] rounded-xl focus:border-cyan-400 focus:outline-none text-xs font-mono text-white placeholder-slate-600 transition-all"
+                      placeholder="operator@safeguard.ai"
                     />
                   </div>
                 </div>
@@ -77,39 +76,43 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={loading || !email}
-                  className="w-full flex items-center justify-center py-2.5 px-4 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-medium transition-all focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(6,182,212,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.5)]"
+                  className="w-full flex items-center justify-center py-3 px-4 bg-cyan-400 hover:bg-cyan-300 text-slate-950 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(0,229,255,0.3)]"
                 >
-                  {loading ? 'Sending...' : 'Send Reset Link'}
+                  {loading ? 'Transmitting OTP...' : 'Send Recovery Instructions'}
                 </button>
               </form>
             </>
           ) : (
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-500/10 mb-6">
-                <Mail className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mb-2">
+                <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h2 className="text-2xl font-bold mb-2">Check your email</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-                We sent a password reset link to <br />
-                <span className="font-medium text-gray-900 dark:text-gray-100">{email}</span>
+              <h2 className="text-2xl font-bold text-white">Check Your Inbox</h2>
+              <p className="text-xs text-slate-400 font-mono leading-relaxed">
+                We sent a secure password reset link and temporary verification PIN to <br />
+                <span className="font-bold text-cyan-400">{email}</span>
               </p>
               
+              <div className="p-3 bg-[#050A0F] border border-[#1D3038] rounded-xl text-[11px] font-mono text-slate-300">
+                Token expires in 15 minutes. Ensure link is signed by verify.safeguard.ai.
+              </div>
+
               <button
                 onClick={() => setIsSubmitted(false)}
-                className="text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:underline"
+                className="text-xs font-mono text-cyan-400 hover:underline"
               >
-                Didn't receive the email? Click to resend
+                Didn't receive instructions? Click to resend
               </button>
             </div>
           )}
 
-          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 text-center">
+          <div className="pt-4 border-t border-[#1D3038] text-center">
             <Link 
               href="/login" 
-              className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+              className="inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-cyan-400 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Login
+              <span>Back to Operator Sign In</span>
             </Link>
           </div>
         </motion.div>

@@ -44,23 +44,23 @@ const navGroups = [
     ]
   },
   {
-    title: 'Threat Detection Tools',
+    title: 'Threat Detection Suite',
     links: [
-      { name: 'Phishing Link Detection', href: '/analyze/url', icon: LinkIcon },
-      { name: 'Fake QR Code Scanner', href: '/analyze/qr', icon: QrCode },
-      { name: 'Password Security Checker', href: '/analyze/password', icon: Key },
-      { name: 'Malicious File Detection', href: '/analyze/file', icon: FileX },
-      { name: 'Secure File Sharing', href: '/analyze/share', icon: Lock },
-      { name: 'Browser Permission Analyzer', href: '/analyze/browser', icon: ShieldAlert },
-      { name: 'Public Wi-Fi Risk Detector', href: '/analyze/network', icon: Wifi },
-      { name: 'Deepfake Detection System', href: '/analyze/deepfake', icon: Eye },
-      { name: 'Ransomware Behavior Shield', href: '/analyze/ransomware', icon: ShieldOff },
-      { name: 'Cyberbullying Detection', href: '/analyze/cyberbullying', icon: MessageSquareX },
-      { name: 'SMS & Message Scanner', href: '/analyze/message', icon: MessageSquare },
-      { name: 'Phishing Email Scanner', href: '/analyze/email', icon: Mail },
-      { name: 'Screenshot Security Check', href: '/analyze/screenshot', icon: Camera },
-      { name: 'Website Vulnerability Check', href: '/analyze/website', icon: Globe },
-      { name: 'Spam Call Protection', href: '/analyze/call', icon: PhoneOff },
+      { name: 'URL Scanner', href: '/analyze/url', icon: LinkIcon },
+      { name: 'Message Scanner', href: '/analyze/message', icon: MessageSquare },
+      { name: 'Email Analyzer', href: '/analyze/email', icon: Mail },
+      { name: 'Evidence Analyzer (Photo/Camera)', href: '/analyze/screenshot', icon: Camera },
+      { name: 'QR Code Scanner', href: '/analyze/qr', icon: QrCode },
+      { name: 'Password Strength & Breach Check', href: '/analyze/password', icon: Key },
+      { name: 'Malicious File Analyzer', href: '/analyze/file', icon: FileX },
+      { name: 'Encrypted File Share', href: '/analyze/share', icon: Lock },
+      { name: 'Browser Security Scanner', href: '/analyze/browser', icon: ShieldAlert },
+      { name: 'Wi-Fi Network Scanner', href: '/analyze/network', icon: Wifi },
+      { name: 'Deepfake Audio/Video Analyzer', href: '/analyze/deepfake', icon: Eye },
+      { name: 'Ransomware Pattern Detector', href: '/analyze/ransomware', icon: ShieldOff },
+      { name: 'Website Reputation Checker', href: '/analyze/website', icon: Globe },
+      { name: 'Spam/Vishing Call Analyzer', href: '/analyze/call', icon: PhoneOff },
+      { name: 'Cyberbullying Detector', href: '/analyze/cyberbullying', icon: MessageSquareX },
     ]
   },
   {
@@ -107,9 +107,9 @@ export default function Sidebar({ onClose }: SidebarProps = {}) {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-base tracking-wide text-slate-100 flex items-center gap-1.5">
-                TRUSTNETRA <span className="text-[#00E5FF] text-xs font-semibold px-1.5 py-0.5 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30">SOC</span>
+                SAFEGUARD AI <span className="text-[#00E5FF] text-xs font-semibold px-1.5 py-0.5 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30">SOC</span>
               </span>
-              <span className="text-[9px] text-[#00D5E8] font-mono tracking-tight uppercase">Think Safe. Click Smart.</span>
+              <span className="text-[10px] text-slate-400 font-mono tracking-wider uppercase">AI Cyber Protection</span>
             </div>
           </Link>
         )}
@@ -185,7 +185,7 @@ export default function Sidebar({ onClose }: SidebarProps = {}) {
                   {user?.name || 'SOC Operator'}
                 </span>
                 <span className="text-[10px] font-mono text-slate-500 truncate">
-                  {user?.email || 'operator@trustnetra.ai'}
+                  {user?.email || 'operator@safeguard.ai'}
                 </span>
               </div>
             )}

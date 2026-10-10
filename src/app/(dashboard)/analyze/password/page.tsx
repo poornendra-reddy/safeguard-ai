@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Key, ShieldCheck, AlertTriangle, CheckCircle, Copy, Info, ShieldAlert } from 'lucide-react';
+import { Key, ShieldCheck, AlertTriangle, CheckCircle, Copy, Info, ShieldAlert, History, Sparkles } from 'lucide-react';
 import { useHistory } from '@/lib/context/providers';
 import { checkPassword } from '@/lib/ai/password-analyzer';
+import { safeguardAPI } from '@/lib/api-client';
 import { AnalysisResult } from '@/types';
 
 export default function PasswordCheckerPage() {
@@ -12,15 +14,22 @@ export default function PasswordCheckerPage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const { addToHistory } = useHistory();
 
-  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheck = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setPassword(val);
     if (!val) {
       setResult(null);
       return;
     }
-    const res = checkPassword(val);
-    setResult(res);
+    const localRes = checkPassword(val);
+    setResult(localRes);
+
+    try {
+      const apiRes = await safeguardAPI.scanPassword(val);
+      setResult(apiRes);
+    } catch {
+      // keep local result
+    }
   };
 
   const handleSaveAssessment = () => {
@@ -30,15 +39,25 @@ export default function PasswordCheckerPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="p-3 bg-yellow-500/20 rounded-xl">
-          <Key className="w-6 h-6 text-yellow-400" />
+    <div className="max-w-4xl mx-auto space-y-8 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="p-3 bg-yellow-500/20 rounded-xl">
+            <Key className="w-6 h-6 text-yellow-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Password Strength & Breach Check</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-mono">Test password entropy & cross-reference 850M+ leaked credential breach archives in real-time. Password is NEVER stored or sent to a server.</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Password Security Checker</h1>
-          <p className="text-gray-500 dark:text-gray-400">Test password strength securely in real-time. Password is NEVER stored or sent to a server.</p>
-        </div>
+
+        <Link
+          href="/history"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 transition-all"
+        >
+          <History className="w-4 h-4" />
+          <span>View Scan History</span>
+        </Link>
       </div>
 
       <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
@@ -50,20 +69,25 @@ export default function PasswordCheckerPage() {
             type="password"
             value={password}
             onChange={handleCheck}
-            placeholder="Type a password to test strength..."
+            placeholder="Type a password to test strength & breach status..."
             className="w-full bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-800 rounded-xl px-4 py-4 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all font-mono"
           />
-          <div className="flex items-center gap-3 mt-3">
+          <div className="flex flex-wrap items-center gap-3 mt-3">
             <button
-              onClick={() => {
+              type="button"
+              onClick={async () => {
                 const samplePass = 'Password123!';
                 setPassword(samplePass);
                 const res = checkPassword(samplePass);
                 setResult(res);
+                try {
+                  const apiRes = await safeguardAPI.scanPassword(samplePass);
+                  setResult(apiRes);
+                } catch {}
               }}
-              className="px-4 py-2 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5"
+              className="px-4 py-2 bg-[#081118] hover:bg-[#111C24] text-cyan-400 border border-cyan-500/40 rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5"
             >
-              <Key className="w-3.5 h-3.5 text-[#00E5FF]" /> TRY EXAMPLE
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> Example
             </button>
             <p className="text-xs text-emerald-500 flex items-center gap-1">
               <ShieldCheck className="w-4 h-4" /> 100% Client-Side Computation — zero data leaves your browser.
@@ -101,9 +125,18 @@ export default function PasswordCheckerPage() {
               <strong>Recommendation:</strong> {result.recommendedAction}
             </div>
 
-            <button onClick={handleSaveAssessment} className="px-5 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-white text-sm font-medium transition-all">
-              Save Assessment to History
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <button onClick={handleSaveAssessment} className="px-5 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono font-medium transition-all">
+                Save Assessment to History
+              </button>
+              <Link
+                href="/history"
+                className="px-5 py-2.5 rounded-xl border border-cyan-500/40 hover:bg-cyan-500/10 text-cyan-400 font-mono text-xs font-medium transition-all flex items-center gap-2"
+              >
+                <History className="w-3.5 h-3.5" />
+                <span>View Threat History Logs</span>
+              </Link>
+            </div>
           </motion.div>
         )}
       </div>

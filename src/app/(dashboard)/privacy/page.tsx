@@ -18,7 +18,7 @@ export default function PrivacyPage() {
     {
       icon: EyeOff,
       title: 'Minimal Data Collection',
-      description: 'We believe in data minimization. TrustNetra only collects the essential information required to analyze threats and provide you with actionable security insights.'
+      description: 'We believe in data minimization. SafeGuard AI only collects the essential information required to analyze threats and provide you with actionable security insights.'
     },
     {
       icon: Lock,
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Privacy & Security</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
-            At TrustNetra, protecting your digital assets is our core mission. 
+            At SafeGuard AI, protecting your digital assets is our core mission. 
             Learn how we secure your data and respect your privacy.
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
           <div>
             <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-500 mb-2">Important Disclaimer</h3>
             <p className="text-amber-700 dark:text-amber-400/90 leading-relaxed">
-              AI analysis provides risk indicators and should not be considered an absolute guarantee that content is safe or malicious. Always exercise personal judgment and follow official cybersecurity guidelines. TrustNetra is a tool to assist, not a replacement for comprehensive security practices.
+              AI analysis provides risk indicators and should not be considered an absolute guarantee that content is safe or malicious. Always exercise personal judgment and follow official cybersecurity guidelines. SafeGuard AI is a tool to assist, not a replacement for comprehensive security practices.
             </p>
           </div>
         </motion.div>

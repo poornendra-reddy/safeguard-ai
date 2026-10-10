@@ -1,5 +1,6 @@
 // ============================================================
-// TrustNetra — Constants & Demo Data
+// SafeGuard AI — Constants, Demo Data & Multi-Language Support
+// Tagline: Detect. Understand. Stay Safe.
 // ============================================================
 
 import { 
@@ -375,13 +376,25 @@ export const CHATBOT_QUICK_PROMPTS = [
 export const CHATBOT_RESPONSES: Record<string, string> = {
   'what is phishing': '🎣 **Phishing** is a cyberattack where criminals send fake messages (emails, SMS, or social media messages) that look like they\'re from trusted organizations to trick you into revealing sensitive information.\n\n**How it works:**\n1. You receive a message that looks legitimate\n2. The message creates urgency ("Your account will be blocked!")\n3. It asks you to click a link or share information\n4. The link leads to a fake website that steals your data\n\n**How to protect yourself:**\n- Always check the sender\'s email/phone number\n- Don\'t click links in unexpected messages\n- Verify requests through official channels\n- Use two-factor authentication',
 
-  'how do i identify a fake website': '🌐 **How to Identify a Fake Website:**\n\n1. **Check the URL carefully** — Look for misspellings (amaz0n.com), unusual domains (.xyz, .tk), or extra words (secure-login-paypal.com)\n\n2. **Look for HTTPS** — Legitimate sites use HTTPS (🔒), but note that some scam sites also use it\n\n3. **Check the domain age** — Scam sites are usually very new\n\n4. **Look for contact information** — Real companies provide physical address, phone number, and email\n\n5. **Check for poor grammar** — Many fake sites have spelling and grammar errors\n\n6. **Verify the company** — Search for the company name + "scam" or "review"\n\n7. **Be suspicious of unrealistic offers** — 90% off deals are almost always scams\n\n💡 **Tip:** Use TrustNetra\'s URL Scanner to instantly check any website!',
+  'how do i identify a fake website': '🌐 **How to Identify a Fake Website:**\n\n1. **Check the URL carefully** — Look for misspellings (amaz0n.com), unusual domains (.xyz, .tk), or extra words (secure-login-paypal.com)\n\n2. **Look for HTTPS** — Legitimate sites use HTTPS (🔒), but note that some scam sites also use it\n\n3. **Check the domain age** — Scam sites are usually very new\n\n4. **Look for contact information** — Real companies provide physical address, phone number, and email\n\n5. **Check for poor grammar** — Many fake sites have spelling and grammar errors\n\n6. **Verify the company** — Search for the company name + "scam" or "review"\n\n7. **Be suspicious of unrealistic offers** — 90% off deals are almost always scams\n\n💡 **Tip:** Use SafeGuard AI\'s URL Scanner to instantly check any website!',
 
   'what should i do if i clicked a suspicious link': '⚠️ **If You Clicked a Suspicious Link:**\n\n**Immediate Steps:**\n1. 🔌 Disconnect from the internet (turn off Wi-Fi/data)\n2. 🔐 Change passwords for any accounts you may have exposed\n3. 📱 Run a virus scan on your device\n4. 🏦 If you entered banking details, call your bank immediately\n\n**Next Steps:**\n5. Enable two-factor authentication on all accounts\n6. Monitor your accounts for unusual activity\n7. Report the incident to the platform where you found the link\n8. File a complaint at cybercrime.gov.in if you lost money\n\n**If you entered personal information:**\n- Monitor your credit reports\n- Be alert for identity theft\n- Consider placing a fraud alert\n\n**Remember:** Acting quickly is key. The sooner you take action, the less damage a scammer can do.',
 
   'how to create a strong password': '🔐 **Creating a Strong Password:**\n\n**Do\'s:**\n- Use **at least 12 characters**\n- Mix **uppercase, lowercase, numbers, and symbols**\n- Use a **passphrase** (e.g., "Mango_Sunrise#2026!kite")\n- Use a **unique password** for each account\n- Use a **password manager** (Bitwarden, 1Password, etc.)\n\n**Don\'ts:**\n- ❌ Don\'t use personal info (name, birthday)\n- ❌ Don\'t use common words (password, 123456)\n- ❌ Don\'t reuse passwords across sites\n- ❌ Don\'t share passwords via text/email\n\n**Password Strength Examples:**\n- ❌ Weak: `password123` (cracked in <1 second)\n- ⚠️ Medium: `Rahul@1990` (cracked in hours)\n- ✅ Strong: `M@ng0_Sunrise#2026!kite` (centuries to crack)\n\n💡 **Pro Tip:** Enable **Two-Factor Authentication (2FA)** on all important accounts for an extra layer of security!',
 
-  'default': '🛡️ I\'m the **TrustNetra Assistant**, your AI cybersecurity guide! I can help you with:\n\n• **Identifying threats** — Ask me about phishing, scams, or suspicious messages\n• **Safety guidance** — Learn how to protect yourself online\n• **Security education** — Understand cybersecurity concepts in simple language\n• **Incident response** — Know what to do if you\'ve been compromised\n\nTry asking me questions like:\n- "What is phishing?"\n- "How do I identify a fake website?"\n- "Is this job offer legitimate?"\n- "What should I do if I clicked a suspicious link?"\n\nOr use the **Analyze** tools to scan a suspicious URL, message, or email!',
+  'is this job offer legitimate': '💼 **How to Spot a Fake Job Offer:**\n\n**Red Flags:**\n1. 💸 **Demanding Money upfront:** Legitimate companies NEVER ask for "registration fees", "laptop security deposits", or "training charges".\n2. 📱 **Only communicating via Telegram / WhatsApp:** Real recruiters use official company domain emails (e.g. `@amazon.com`, `@tcs.com`).\n3. 🚫 **No real interview:** If you are "selected immediately" without technical or behavioral rounds, it is 100% a scam.\n4. 💰 **Unrealistic pay for simple tasks:** E.g., "Earn ₹5,000/day by liking YouTube videos or typing captchas".\n\n**Action Steps:**\n- Do not transfer any money.\n- Check the company\'s official careers portal directly.\n- Block and report the sender on WhatsApp/Telegram.',
+
+  'is this sms a scam': '📱 **How to Tell if an SMS is a Scam (Smishing):**\n\n**Common Signs:**\n1. 🚨 **Extreme Urgency:** "Electricity will be disconnected at 9:30 PM", "SBI account suspended immediately".\n2. 🔗 **Unfamiliar shortlinks:** Links containing bit.ly, tinyurl, or suspicious domains like `sbi-kyc-update.online`.\n3. 🔢 **10-digit sender numbers:** Official banks use registered alphabetic sender IDs (e.g., `AD-SBIINB`, `VM-HDFCBK`), NOT random 10-digit mobile numbers.\n4. 📥 **APK download requests:** Asking to install `.apk` files or remote tools like AnyDesk/TeamViewer.\n\n💡 **Tip:** Copy the message and paste it into our **Message Scanner** for instant AI classification!',
+
+  'how do qr code scams work': '📷 **How QR Code Scams (Quishing) Work:**\n\n**Golden Rule of UPI:**\n> **You ONLY enter your UPI PIN to SEND money, NEVER to receive money!**\n\n**How scammers trick victims:**\n1. They post a fake QR code on social media or OLX claiming "Scan this QR to receive your refund / advance payment".\n2. When you scan it, the QR actually initiates a **Collect Request** or Payment Mandate.\n3. They urge you to "just enter your UPI PIN to verify your identity". The moment you enter your PIN, money is deducted from your bank!\n\n**Protection:**\n- Never scan a QR code to receive money.\n- Use our **QR Scanner** to decode and inspect suspicious QR targets before paying.',
+
+  'what is two-factor authentication': '🛡️ **What is Two-Factor Authentication (2FA)?**\n\nTwo-Factor Authentication adds a second protective wall beyond your password:\n\n1. **Factor 1 (Something you know):** Your password.\n2. **Factor 2 (Something you have):** An authenticator app code (like Google Authenticator) or hardware security key (YubiKey).\n\nEven if a hacker steals your password via phishing or a data breach, they **cannot log in** without your 2FA device.\n\n⚠️ **Tip:** Prefer Authenticator Apps over SMS OTPs when possible, as SMS can be vulnerable to SIM-swap attacks.',
+
+  'is this message safe': '🔍 **Evaluating Message Safety:**\n\nTo know if a message is safe, look for these 4 red flags:\n1. Does it urge immediate action or threaten consequences?\n2. Does it offer unexpected lottery winnings, gifts, or high-paying easy jobs?\n3. Does it include a link or ask for an OTP/UPI PIN?\n4. Is the sender unknown or pretending to be a bank from a personal phone number?\n\nIf you answered "Yes" to any of these, treat it as **SUSPICIOUS**! Paste the text here or in our **Analyze Message** tool for instant scoring.',
+
+  'how to report a scam': '🚨 **How to Report a Cyber Scam in India:**\n\n1. **National Cybercrime Helpline:** Call **1930** immediately if you suffered a financial loss (funds can be frozen within the golden hour).\n2. **National Cybercrime Portal:** File a detailed complaint at [cybercrime.gov.in](https://cybercrime.gov.in).\n3. **SafeGuard AI Scam Registry:** Submit the details on our **Report Scam** page to warn other citizens and train our threat intelligence models.\n4. **Your Bank:** Notify your bank within 24 hours to block compromised cards/accounts and request a chargeback.',
+
+  'default': '🛡️ I\'m the **SafeGuard Assistant**, your AI cybersecurity guide! I can help you with:\n\n• **Identifying threats** — Ask me about phishing, scams, or suspicious messages\n• **Analyzing pasted content** — Paste any text, SMS, or link directly here!\n• **Safety guidance** — Learn how to protect yourself online\n• **Incident response** — What to do if you clicked a suspicious link or sent money\n• **Reporting scams** — Steps to report frauds to authorities\n\nTry asking me:\n- "Is this message safe?"\n- "What is phishing?"\n- "How do I identify a fake website?"\n- "What should I do if I clicked a suspicious link?"\n- "Is this job offer legitimate?"\n- "How do QR code scams work?"',
 };
 
 // Analysis pipeline steps
@@ -423,3 +436,114 @@ export const DAILY_DETECTIONS_DATA = [
   { date: 'Sep 29', detections: 58 },
   { date: 'Sep 30', detections: 84 },
 ];
+
+// Multi-language UI translations
+export const UI_TRANSLATIONS = {
+  en: {
+    projectName: 'SAFEGUARD AI',
+    tagline: 'Detect. Understand. Stay Safe.',
+    heroHeadline: 'Think Before You Click.',
+    heroSubheadline: 'AI-powered protection against phishing, fake links, malicious websites, and online scams.',
+    analyzeNow: 'Analyze Now',
+    exploreProtection: 'Explore Protection',
+    welcomeBack: 'Welcome back',
+    securityScore: 'Your Security Score',
+    threatsDetected: 'Threats Detected',
+    safeChecks: 'Safe Checks',
+    highRiskDetections: 'High Risk Detections',
+    analyzeSuspiciousContent: 'Analyze Suspicious Content',
+    whyRisky: 'Why is this risky?',
+    recommendedAction: 'Recommended Action',
+    explainNewbie: 'Explain Like I\'m New to Cybersecurity',
+    eli5: 'Simple Explanation',
+    technicalAnalysis: 'Technical Analysis',
+    reportThreat: 'Report Threat',
+    downloadPdf: 'Download PDF Report',
+    shareReport: 'Share Report',
+    disclaimer: 'AI analysis provides risk indicators and should not be considered an absolute guarantee that content is safe or malicious.',
+    builtForIndia: 'Built for a safer digital India.'
+  },
+  te: {
+    projectName: 'సేఫ్‌గార్డ్ AI',
+    tagline: 'గుర్తించండి. అర్థం చేసుకోండి. సురక్షితంగా ఉండండి.',
+    heroHeadline: 'క్లిక్ చేసే ముందు ఒకటికి రెండుసార్లు ఆలోచించండి.',
+    heroSubheadline: 'ఫిషింగ్, నకిలీ లింకులు, ప్రమాదకర వెబ్‌సైట్లు మరియు ఆన్‌లైన్ మోసాల నుండి AI-రక్షణ.',
+    analyzeNow: 'ఇప్పుడే విశ్లేషించండి',
+    exploreProtection: 'రక్షణను అన్వేషించండి',
+    welcomeBack: 'స్వాగతం',
+    securityScore: 'మీ భద్రతా స్కోరు',
+    threatsDetected: 'గుర్తించిన ముప్పులు',
+    safeChecks: 'సురక్షిత తనిఖీలు',
+    highRiskDetections: 'అధిక ప్రమాద ముప్పులు',
+    analyzeSuspiciousContent: 'అనుమానాస్పద కంటెంట్‌ను విశ్లేషించండి',
+    whyRisky: 'ఇది ఎందుకు ప్రమాదకరం?',
+    recommendedAction: 'సిఫార్సు చేసిన భద్రతా చర్య',
+    explainNewbie: 'నాకు సులభంగా అర్థమయ్యేలా వివరించండి',
+    eli5: 'సాధారణ వివరణ',
+    technicalAnalysis: 'సాంకేతిక విశ్లేషణ',
+    reportThreat: 'ముప్పును నివేదించండి',
+    downloadPdf: 'PDF నివేదికను డౌన్‌లోడ్ చేయండి',
+    shareReport: 'నివేదికను భాగస్వామ్యం చేయండి',
+    disclaimer: 'AI విశ్లేషణ ప్రమాద సూచికలను మాత్రమే అందిస్తుంది మరియు కంటెంట్ పూర్తిగా సురక్షితమని లేదా హానికరమని హామీ ఇవ్వదు.',
+    builtForIndia: 'సురక్షితమైన డిజిటల్ భారతదేశం కోసం రూపొందించబడింది.'
+  },
+  hi: {
+    projectName: 'सेफगार्ड AI',
+    tagline: 'पहचानें। समझें। सुरक्षित रहें।',
+    heroHeadline: 'क्लिक करने से पहले सोचें।',
+    heroSubheadline: 'फ़िशिंग, नकली लिंक, दुर्भावनापूर्ण वेबसाइटों और ऑनलाइन घोटालों से एआई-संचालित सुरक्षा।',
+    analyzeNow: 'अभी विश्लेषण करें',
+    exploreProtection: 'सुरक्षा देखें',
+    welcomeBack: 'वापसी पर स्वागत है',
+    securityScore: 'आपका सुरक्षा स्कोर',
+    threatsDetected: 'पहचाने गए खतरे',
+    safeChecks: 'सुरक्षित जांच',
+    highRiskDetections: 'उच्च जोखिम वाले खतरे',
+    analyzeSuspiciousContent: 'संदिग्ध सामग्री की जांच करें',
+    whyRisky: 'यह जोखिम भरा क्यों है?',
+    recommendedAction: 'सुरक्षा की सिफारिश',
+    explainNewbie: 'सरल भाषा में समझाइए',
+    eli5: 'सरल व्याख्या',
+    technicalAnalysis: 'तकनीकी विश्लेषण',
+    reportThreat: 'खतरे की रिपोर्ट करें',
+    downloadPdf: 'पीडीएफ रिपोर्ट डाउनलोड करें',
+    shareReport: 'रिपोर्ट साझा करें',
+    disclaimer: 'एआई विश्लेषण जोखिम संकेतक प्रदान करता है और इसे पूर्ण गारंटी नहीं माना जाना चाहिए।',
+    builtForIndia: 'एक सुरक्षित डिजिटल भारत के लिए निर्मित।'
+  }
+};
+
+// Daily Security Tips
+export const SECURITY_TIPS = [
+  {
+    id: 1,
+    title: 'Never Share Bank OTPs or UPI PINs',
+    content: 'Banks, couriers, or tech support will NEVER ask for your OTP or UPI PIN. Entering a UPI PIN always sends money, never receives it.',
+    category: 'Banking'
+  },
+  {
+    id: 2,
+    title: 'Inspect Domains Before Entering Credentials',
+    content: 'Look out for sneaky letter swaps like micros0ft.com or sbi-kyc-verify.tk. Always type the official URL directly in your browser.',
+    category: 'Phishing'
+  },
+  {
+    id: 3,
+    title: 'Be Wary of "Urgent Account Suspension" Threats',
+    content: 'Attackers create fake urgency ("Your SIM/Electricity/Bank will be blocked in 2 hours") to trigger panic decisions. Pause and verify independently.',
+    category: 'Smishing'
+  },
+  {
+    id: 4,
+    title: 'Scan QR Codes with Caution',
+    content: 'QR codes in public stalls or sent over chat can initiate instant payment requests or open phishing portals. Always preview the decoded destination.',
+    category: 'QR Safety'
+  },
+  {
+    id: 5,
+    title: 'Verify Job Offers Demanding "Registration Fees"',
+    content: 'Legitimate companies like Amazon, Google, or TCS never ask candidates to pay training fees, kit charges, or Telegram verification deposits.',
+    category: 'Job Scams'
+  }
+];
+

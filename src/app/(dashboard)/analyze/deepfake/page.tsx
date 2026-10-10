@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Eye, Upload, AlertTriangle, CheckCircle, Video } from 'lucide-react';
+import { Eye, Upload, AlertTriangle, CheckCircle, Video, History, ArrowRight, Sparkles } from 'lucide-react';
 import { useHistory } from '@/lib/context/providers';
 import { analyzeDeepfakeMedia } from '@/lib/ai/deepfake-analyzer';
+import { safeguardAPI } from '@/lib/api-client';
 import { AnalysisResult } from '@/types';
 
 export default function DeepfakeDetectorPage() {
@@ -12,27 +14,42 @@ export default function DeepfakeDetectorPage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const { addToHistory } = useHistory();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selected = e.target.files[0];
       setFile(selected);
-      const res = analyzeDeepfakeMedia({ name: selected.name, size: selected.size, type: selected.type });
+      let res: AnalysisResult | null = null;
+      try {
+        res = await safeguardAPI.scanDeepfake(selected);
+      } catch (err: any) {
+        console.warn('Backend deepfake scan notice, using local engine fallback:', err?.message);
+        res = analyzeDeepfakeMedia({ name: selected.name, size: selected.size, type: selected.type });
+      }
       setResult(res);
-
       addToHistory(res);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="p-3 bg-purple-500/20 rounded-xl">
-          <Eye className="w-6 h-6 text-purple-400" />
+    <div className="max-w-4xl mx-auto space-y-8 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="p-3 bg-purple-500/20 rounded-xl">
+            <Eye className="w-6 h-6 text-purple-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">AI Deepfake & Media Manipulation Detector</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-mono">Analyze images, audio, & video for synthetic facial/voice AI indicators.</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">AI Deepfake & Media Manipulation Detector</h1>
-          <p className="text-gray-500 dark:text-gray-400">Analyze images, audio, & video for synthetic facial/voice AI indicators.</p>
-        </div>
+
+        <Link
+          href="/history"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 transition-all"
+        >
+          <History className="w-4 h-4" />
+          <span>View Scan History</span>
+        </Link>
       </div>
 
       <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
@@ -46,17 +63,23 @@ export default function DeepfakeDetectorPage() {
           <div className="pt-3">
             <button
               type="button"
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.stopPropagation();
                 const sampleFile = new File(['fake_media'], 'synthetic_ceo_voice_clone.wav', { type: 'audio/wav' });
                 setFile(sampleFile);
-                const res = analyzeDeepfakeMedia({ name: sampleFile.name, type: sampleFile.type, size: 1850000 });
+                let res: AnalysisResult | null = null;
+                try {
+                  res = await safeguardAPI.scanDeepfake(sampleFile);
+                } catch {
+                  res = analyzeDeepfakeMedia({ name: sampleFile.name, type: sampleFile.type, size: 1850000 });
+                }
                 setResult(res);
                 addToHistory(res);
               }}
               className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all inline-flex items-center gap-2"
             >
-              TRY EXAMPLE
+              <Sparkles className="w-4 h-4 text-[#00E5FF]" />
+              <span>Example</span>
             </button>
           </div>
         </div>
@@ -85,8 +108,25 @@ export default function DeepfakeDetectorPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-sm text-purple-300">
+            <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-sm text-purple-300 font-mono text-xs">
               <strong>Recommendation:</strong> {result.recommendedAction}
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#1D3038]">
+              <Link
+                href="/history"
+                className="px-4 py-2 bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 rounded-xl transition-all flex items-center gap-1.5"
+              >
+                <History className="w-3.5 h-3.5" />
+                <span>View Threat History Logs</span>
+              </Link>
+              <Link
+                href={`/report/${result.id || 'current'}`}
+                className="px-4 py-2 bg-white hover:bg-slate-200 text-slate-950 font-mono text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
+              >
+                <span>View Full Report</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
 
             <p className="text-xs text-gray-400 italic">

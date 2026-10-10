@@ -1,14 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   PhoneOff, Search, AlertTriangle, ShieldCheck, RefreshCw, CheckCircle,
   HelpCircle, ChevronDown, ChevronUp, Copy, Share2, Info, Flag, AlertCircle,
-  ShieldAlert, PhoneCall, Radio, UserX, Zap
+  ShieldAlert, PhoneCall, Radio, UserX, Zap, History, ArrowRight, FileText, Sparkles
 } from 'lucide-react';
 import { useHistory } from '@/lib/context/providers';
 import { AnalysisResult } from '@/types';
+import { analyzeCall } from '@/lib/ai/call-analyzer';
+import { safeguardAPI } from '@/lib/api-client';
 
 const ANALYSIS_STEPS = [
   { label: 'Parsing Phone Number Format & Country Code...', desc: 'Checking international prefix reputation' },
@@ -73,26 +76,19 @@ export default function SpamCallDetectorPage() {
         setCurrentStep(prev => (prev < ANALYSIS_STEPS.length - 1 ? prev + 1 : prev));
       }, 80);
 
-      const response = await fetch('/api/analyze/call', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber, transcript })
-      });
-
-      clearInterval(stepTimer);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Backend API call failed');
+      let finalResult: AnalysisResult | null = null;
+      try {
+        finalResult = await safeguardAPI.scanCall({
+          phone_number: phoneNumber.trim(),
+          transcript: transcript.trim() || undefined
+        });
+      } catch (apiErr: any) {
+        console.warn('Backend call scan notice, using local engine fallback:', apiErr?.message);
+        finalResult = analyzeCall(phoneNumber, transcript);
       }
 
-      const data = await response.json();
-      if (data.success && data.result) {
-        setResult(data.result);
-        addToHistory(data.result);
-      } else {
-        throw new Error('Invalid response format from server');
-      }
+      setResult(finalResult);
+      addToHistory(finalResult);
     } catch (err: any) {
       console.error(err);
       setError(err?.message || 'Analysis failed. Please check the phone number and try again.');
@@ -121,16 +117,26 @@ export default function SpamCallDetectorPage() {
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="p-3 bg-red-500/10 rounded-xl border border-red-500/20">
-          <PhoneOff className="w-8 h-8 text-red-400" />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 border-b border-[#1D3038] pb-5">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-red-500/10 rounded-xl border border-red-500/20">
+            <PhoneOff className="w-8 h-8 text-red-400" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              Spam Call & Vishing Detector <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">NEW TOOL</span>
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1 text-xs font-mono">Detect suspicious phone calls, robocalls, TRAI SIM block threats, & Digital Arrest scams</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            Spam Call & Vishing Detector <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">NEW TOOL</span>
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Detect suspicious phone calls, robocalls, TRAI SIM block threats, & Digital Arrest scams</p>
-        </div>
+
+        <Link
+          href="/history"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 transition-all"
+        >
+          <History className="w-4 h-4" />
+          <span>View Scan History</span>
+        </Link>
       </div>
 
 
@@ -194,7 +200,7 @@ export default function SpamCallDetectorPage() {
             disabled={isAnalyzing}
             className="px-5 py-3 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2"
           >
-            <Zap className="w-4 h-4 text-[#00E5FF]" /> TRY EXAMPLE
+            <Sparkles className="w-4 h-4 text-[#00E5FF]" /> Example
           </button>
           <button
             onClick={clearForm}
@@ -310,6 +316,22 @@ export default function SpamCallDetectorPage() {
                 </li>
               ))}
             </ul>
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#1D3038]">
+              <Link
+                href="/history"
+                className="px-4 py-2 bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 rounded-xl transition-all flex items-center gap-1.5"
+              >
+                <History className="w-3.5 h-3.5" />
+                <span>View Threat History Logs</span>
+              </Link>
+              <Link
+                href={`/report/${result.id || 'current'}`}
+                className="px-4 py-2 bg-white hover:bg-slate-200 text-slate-950 font-mono text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
+              >
+                <span>View Full Report</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
         </motion.div>
       )}

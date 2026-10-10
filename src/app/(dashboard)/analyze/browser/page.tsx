@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ShieldAlert, AlertTriangle, CheckCircle, Search } from 'lucide-react';
+import { ShieldAlert, AlertTriangle, CheckCircle, Search, History, ArrowRight, Sparkles } from 'lucide-react';
 import { useHistory } from '@/lib/context/providers';
 import { analyzeBrowserPermissions } from '@/lib/ai/browser-analyzer';
+import { safeguardAPI } from '@/lib/api-client';
 import { AnalysisResult } from '@/types';
 
 export default function BrowserPermissionPage() {
@@ -12,24 +14,39 @@ export default function BrowserPermissionPage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const { addToHistory } = useHistory();
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!manifestText.trim()) return;
-    const res = analyzeBrowserPermissions(manifestText);
+    let res: AnalysisResult | null = null;
+    try {
+      res = await safeguardAPI.scanBrowser(manifestText);
+    } catch (err: any) {
+      console.warn('Backend browser scan notice, using local engine fallback:', err?.message);
+      res = analyzeBrowserPermissions(manifestText);
+    }
     setResult(res);
-
     addToHistory(res);
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="p-3 bg-orange-500/20 rounded-xl">
-          <ShieldAlert className="w-6 h-6 text-orange-400" />
+    <div className="max-w-4xl mx-auto space-y-8 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="p-3 bg-orange-500/20 rounded-xl">
+            <ShieldAlert className="w-6 h-6 text-orange-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Browser Permission Analyzer</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-xs font-mono">Inspect extension manifest permissions for excessive data access risks.</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Browser Permission Analyzer</h1>
-          <p className="text-gray-500 dark:text-gray-400">Inspect extension manifest permissions for excessive data access risks.</p>
-        </div>
+
+        <Link
+          href="/history"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 transition-all"
+        >
+          <History className="w-4 h-4" />
+          <span>View Scan History</span>
+        </Link>
       </div>
 
       <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
@@ -54,16 +71,22 @@ export default function BrowserPermissionPage() {
             <Search className="w-5 h-5" /> Analyze Extension Permissions
           </button>
           <button
-            onClick={() => {
+            onClick={async () => {
               const sampleManifest = `{\n  "name": "Super PDF Downloader",\n  "permissions": ["<all_urls>", "cookies", "webRequest", "webRequestBlocking", "tabs", "storage", "clipboardRead"]\n}`;
               setManifestText(sampleManifest);
-              const res = analyzeBrowserPermissions(sampleManifest);
+              let res: AnalysisResult | null = null;
+              try {
+                res = await safeguardAPI.scanBrowser(sampleManifest);
+              } catch {
+                res = analyzeBrowserPermissions(sampleManifest);
+              }
               setResult(res);
               addToHistory(res);
             }}
             className="px-5 py-2.5 bg-[#081118] hover:bg-[#111C24] text-[#00E5FF] border border-[#00E5FF]/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
           >
-            TRY EXAMPLE
+            <Sparkles className="w-4 h-4 text-[#00E5FF]" />
+            <span>Example</span>
           </button>
         </div>
 
@@ -91,8 +114,25 @@ export default function BrowserPermissionPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 text-sm text-orange-300">
+            <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 text-sm text-orange-300 font-mono text-xs">
               <strong>Recommendation:</strong> {result.recommendedAction}
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#1D3038]">
+              <Link
+                href="/history"
+                className="px-4 py-2 bg-[#0E171F] border border-[#1D3038] hover:border-cyan-400 text-xs font-mono text-cyan-400 rounded-xl transition-all flex items-center gap-1.5"
+              >
+                <History className="w-3.5 h-3.5" />
+                <span>View Threat History Logs</span>
+              </Link>
+              <Link
+                href={`/report/${result.id || 'current'}`}
+                className="px-4 py-2 bg-white hover:bg-slate-200 text-slate-950 font-mono text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
+              >
+                <span>View Full Report</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </motion.div>
         )}

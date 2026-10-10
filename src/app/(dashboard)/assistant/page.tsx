@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, User, Send, Trash2, MoreHorizontal } from 'lucide-react';
 import { CHATBOT_QUICK_PROMPTS, CHATBOT_RESPONSES } from '@/lib/constants';
+import { safeguardAPI } from '@/lib/api-client';
 
 type Message = {
   id: string;
@@ -17,7 +18,7 @@ export default function AssistantPage() {
     {
       id: '1',
       type: 'assistant',
-      content: CHATBOT_RESPONSES['default'] || "Hello! I'm your TrustNetra Security Assistant. How can I help you today?",
+      content: CHATBOT_RESPONSES['default'] || "Hello! I'm your SafeGuard Assistant. How can I help you today?",
       timestamp: new Date()
     }
   ]);
@@ -33,7 +34,7 @@ export default function AssistantPage() {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSend = (text: string) => {
+  const handleSend = async (text: string) => {
     if (!text.trim()) return;
 
     const userMessage: Message = {
@@ -47,10 +48,27 @@ export default function AssistantPage() {
     setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
-      let matchedResponse = CHATBOT_RESPONSES['default'];
+    let matchedResponse = '';
+    try {
+      const historyPayload = messages.slice(-6).map(m => ({
+        role: m.type === 'user' ? 'user' : 'assistant',
+        content: m.content
+      }));
+      const res = await safeguardAPI.chatAssistant({
+        message: text,
+        history: historyPayload
+      });
+      if (res && res.response) {
+        matchedResponse = res.response;
+      }
+    } catch (apiErr: any) {
+      console.warn('Backend assistant notice, using local intelligent heuristic fallback:', apiErr?.message);
+    }
+
+    if (!matchedResponse) {
       const lowerText = text.toLowerCase();
       
+      // 1. Check exact prompt or knowledge base matches
       for (const [key, response] of Object.entries(CHATBOT_RESPONSES)) {
         if (key !== 'default' && lowerText.includes(key.toLowerCase())) {
           matchedResponse = response;
@@ -58,29 +76,60 @@ export default function AssistantPage() {
         }
       }
 
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'assistant',
-        content: matchedResponse,
-        timestamp: new Date()
-      };
+      // 2. If no knowledge base match, perform real-time threat inspection on pasted content
+      if (!matchedResponse) {
+        const hasUrl = /https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.(xyz|top|tk|cn|shop|ru|work)/i.test(text);
+        const hasUrgency = /urgent|immediate|24 hours|suspended|blocked|expires today|action required/i.test(text);
+        const hasMoney = /₹|\$|won|prize|lottery|crore|lakh|refund|bonus|free gift/i.test(text);
+        const hasCredentials = /otp|password|pin|cvv|aadhaar|pan card|bank account|kyc/i.test(text);
+        const hasJob = /part-time|work from home|daily income|telegram hr|task based/i.test(text);
 
-      setMessages(prev => [...prev, assistantMessage]);
-      setIsTyping(false);
-    }, 1000);
+        if (hasUrl || hasUrgency || hasMoney || hasCredentials || hasJob) {
+          let score = 20;
+          const flags: string[] = [];
+
+          if (hasUrl) { score += 30; flags.push('Contains external / unverified link'); }
+          if (hasUrgency) { score += 25; flags.push('High psychological urgency or panic trigger'); }
+          if (hasMoney) { score += 25; flags.push('Unrealistic monetary promise / reward bait'); }
+          if (hasCredentials) { score += 30; flags.push('Requests sensitive credentials (OTP, PIN, KYC)'); }
+          if (hasJob) { score += 20; flags.push('Suspicious work-from-home or advance fee pattern'); }
+
+          score = Math.min(score, 98);
+          const riskLevel = score >= 75 ? 'HIGH RISK 🚨' : score >= 50 ? 'SUSPICIOUS ⚠️' : 'POTENTIAL CAUTION ⚡';
+
+          matchedResponse = `🛡️ **Real-Time Threat Assessment:**\n\n` +
+            `**Risk Score:** ${score}/100 (${riskLevel})\n\n` +
+            `**Detected Indicators:**\n` +
+            flags.map(f => `• ${f}`).join('\n') + `\n\n` +
+            `**AI Recommendation:**\n` +
+            `Do NOT click any links, do not share OTPs or UPI PINs, and do not make payments. You can run a deep diagnostic using the dedicated **URL Scanner** or **Message Scanner** from the sidebar for full technical forensics!`;
+        } else {
+          matchedResponse = CHATBOT_RESPONSES['default'];
+        }
+      }
+    }
+
+    const assistantMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      type: 'assistant',
+      content: matchedResponse,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, assistantMessage]);
+    setIsTyping(false);
   };
 
   const handleClear = () => {
     setMessages([{
       id: Date.now().toString(),
       type: 'assistant',
-      content: "Chat cleared. How can I help you?",
+      content: "Chat cleared. How can I help you today?",
       timestamp: new Date()
     }]);
   };
 
   const formatText = (text: string) => {
-    // Simple markdown-like bold formatting
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
@@ -96,7 +145,7 @@ export default function AssistantPage() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-3 text-gray-900 dark:text-white">
             <Bot className="w-8 h-8 text-cyan-500" />
-            TrustNetra Assistant
+            SafeGuard Assistant
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">AI-powered security advisor at your service.</p>
         </div>

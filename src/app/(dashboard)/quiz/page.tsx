@@ -6,16 +6,19 @@ import { HelpCircle, CheckCircle2, XCircle, ArrowRight, RotateCcw, Home, Shield,
 import { QUIZ_QUESTIONS } from '@/lib/constants';
 import Link from 'next/link';
 
+import { useAuth } from '@/lib/context/providers';
+
 type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 
 export default function QuizPage() {
+  const { user, updateUser } = useAuth();
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
   const filteredQuestions = difficulty 
-    ? QUIZ_QUESTIONS.filter((q: any) => q.difficulty === difficulty) 
+    ? QUIZ_QUESTIONS.filter((q: any) => q.difficulty?.toLowerCase() === difficulty.toLowerCase()) 
     : [];
 
   const handleStart = (level: Difficulty) => {
@@ -32,13 +35,24 @@ export default function QuizPage() {
     if (currentQuestionIndex < filteredQuestions.length - 1) {
       setTimeout(() => setCurrentQuestionIndex(prev => prev + 1), 400);
     } else {
-      setTimeout(() => setIsFinished(true), 400);
+      setTimeout(() => {
+        setIsFinished(true);
+        // Calculate and update security score
+        const correctCount = newAnswers.reduce((sc, ans, idx) => {
+          return ans === filteredQuestions[idx].correctAnswer ? sc + 1 : sc;
+        }, 0);
+        const percent = Math.round((correctCount / filteredQuestions.length) * 100);
+        if (percent >= 60 && user) {
+          const newScore = Math.min(100, Math.max(user.securityScore || 70, (user.securityScore || 70) + 5));
+          updateUser({ securityScore: newScore });
+        }
+      }, 400);
     }
   };
 
   const calculateScore = () => {
     return selectedAnswers.reduce((score, answer, index) => {
-      return answer === filteredQuestions[index].correctAnswer ? score + 1 : score;
+      return answer === filteredQuestions[index]?.correctAnswer ? score + 1 : score;
     }, 0);
   };
 

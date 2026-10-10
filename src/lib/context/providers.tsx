@@ -1,11 +1,12 @@
 'use client';
 // ============================================================
-// TrustNetra — Theme, Auth, Notification Context Providers
+// SAFEGUARD AI — Theme, Auth, Notification Context Providers
 // ============================================================
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { User, Notification, AnalysisResult } from '@/types';
 import { SAMPLE_NOTIFICATIONS } from '@/lib/constants';
+import { safeguardAPI } from '@/lib/api-client';
 
 // ============================================================
 // Theme Context
@@ -207,6 +208,19 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
     if (stored) {
       try { setHistory(JSON.parse(stored)); } catch { /* ignore */ }
     }
+
+    // Synchronize with Python backend audit log
+    safeguardAPI.getHistory(50).then(remoteHistory => {
+      if (Array.isArray(remoteHistory) && remoteHistory.length > 0) {
+        setHistory(prev => {
+          const existingIds = new Set(prev.map(p => p.id));
+          const newItems = remoteHistory.filter(r => !existingIds.has(r.id));
+          return [...prev, ...newItems].slice(0, 100);
+        });
+      }
+    }).catch(() => {
+      // Offline fallback silent
+    });
   }, []);
 
   useEffect(() => {
@@ -221,7 +235,10 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
     setHistory(prev => prev.filter(h => h.id !== id));
   }, []);
 
-  const clearHistory = useCallback(() => { setHistory([]); }, []);
+  const clearHistory = useCallback(() => {
+    setHistory([]);
+    safeguardAPI.clearHistory().catch(() => {});
+  }, []);
 
   return (
     <HistoryContext.Provider value={{ history, addToHistory, removeFromHistory, clearHistory }}>

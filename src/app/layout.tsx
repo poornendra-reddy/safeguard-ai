@@ -7,8 +7,8 @@ import DynamicBackground from '@/components/layout/DynamicBackground';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TrustNetra — Think Safe. Click Smart. TrustNetra.',
-  description: 'AI-Powered Cybersecurity Platform & Real-Time Threat Intelligence Command Center.',
+  title: 'SafeGuard AI — Phishing, Fraud & Cyber Threat Detection Platform',
+  description: 'AI-Powered Cyber Security Platform & Real-Time Threat Intelligence Command Center.',
 };
 
 export default function RootLayout({

@@ -12,7 +12,7 @@ const INITIAL_NOTIFICATIONS = [
   { id: '2', type: 'danger', title: 'Malicious URL Detected', message: 'A link in your recent SMS matches our database of known phishing sites.', timestamp: '2 hours ago', read: false, group: 'Today' },
   { id: '3', type: 'success', title: 'Weekly Scan Complete', message: 'Your weekly security scan found no new vulnerabilities.', timestamp: 'Yesterday', read: true, group: 'Yesterday' },
   { id: '4', type: 'info', title: 'New Quiz Available', message: 'Test your knowledge on social engineering attacks in the new Advanced quiz.', timestamp: '2 days ago', read: true, group: 'Earlier' },
-  { id: '5', type: 'info', title: 'App Update', message: 'TrustNetra has been updated to version 2.1.0 with new threat intelligence feeds.', timestamp: '1 week ago', read: true, group: 'Earlier' },
+  { id: '5', type: 'info', title: 'App Update', message: 'SafeGuard AI has been updated to version 2.1.0 with new threat intelligence feeds.', timestamp: '1 week ago', read: true, group: 'Earlier' },
 ];
 
 export default function NotificationsPage() {
