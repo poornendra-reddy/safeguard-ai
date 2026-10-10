@@ -7,8 +7,8 @@ import DynamicBackground from '@/components/layout/DynamicBackground';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TrustNetra — Detect. Understand. Stay Safe.',
-  description: 'AI-powered protection against phishing, fake links, malicious websites, and online scams.',
+  title: 'TrustNetra — Think Safe. Click Smart. TrustNetra.',
+  description: 'AI-Powered Cybersecurity Platform & Real-Time Threat Intelligence Command Center.',
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-[#030712] text-slate-100 min-h-screen antialiased`}>
+      <body className={`${inter.className} bg-[#070D12] text-slate-100 min-h-screen antialiased`}>
         <ThemeProvider>
           <AuthProvider>
             <NotificationProvider>

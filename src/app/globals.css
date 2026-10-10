@@ -4,30 +4,30 @@
 
 @layer base {
   :root {
-    --background: 222 47% 4%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 6%;
+    --background: 207 43% 5%;    /* #070D12 */
+    --foreground: 210 40% 98%;   /* #F1F5F9 */
+    --card: 207 40% 10%;         /* #101C25 */
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 6%;
+    --popover: 207 40% 10%;
     --popover-foreground: 210 40% 98%;
-    --primary: 186 100% 50%;
-    --primary-foreground: 222 47% 4%;
-    --secondary: 217 33% 10%;
+    --primary: 185 100% 45%;     /* #00D5E8 */
+    --primary-foreground: 207 43% 5%;
+    --secondary: 206 44% 7%;     /* #0B141C */
     --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 12%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 186 100% 50%;
-    --accent-foreground: 222 47% 4%;
-    --destructive: 0 84% 60%;
+    --muted: 206 44% 10%;
+    --muted-foreground: 215 16% 65%; /* #94A3B8 */
+    --accent: 185 100% 45%;      /* #00D5E8 */
+    --accent-foreground: 207 43% 5%;
+    --destructive: 350 89% 60%;  /* #F43F5E */
     --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 15%;
-    --input: 217 33% 15%;
-    --ring: 186 100% 50%;
+    --border: 204 30% 20%;       /* #233541 */
+    --input: 204 30% 20%;
+    --ring: 185 100% 45%;
     --radius: 0.5rem;
   }
 
   body {
-    background-color: #030712;
+    background-color: #070D12;
     color: #F1F5F9;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -44,13 +44,13 @@
   .bg-cyber-grid {
     background-size: 36px 36px;
     background-image: 
-      linear-gradient(to right, rgba(0, 229, 255, 0.07) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 229, 255, 0.07) 1px, transparent 1px);
+      linear-gradient(to right, rgba(0, 213, 232, 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 213, 232, 0.07) 1px, transparent 1px);
   }
 
   .soc-card {
-    background-color: #0B131E;
-    border: 1px solid #192837;
+    background-color: #101C25;
+    border: 1px solid #233541;
     box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
   }
   
@@ -58,15 +58,15 @@
     transition: all 0.2s ease-in-out;
   }
   .soc-card-hover:hover {
-    background-color: #0F1A28;
-    border-color: #243A4E;
-    box-shadow: 0 6px 24px -2px rgba(0, 229, 255, 0.12);
+    background-color: #152430;
+    border-color: #00D5E8;
+    box-shadow: 0 6px 24px -2px rgba(0, 213, 232, 0.15);
   }
 
   .glass {
     backdrop-filter: blur(12px);
-    background-color: rgba(11, 19, 30, 0.85);
-    border: 1px solid #192837;
+    background-color: rgba(16, 28, 37, 0.85);
+    border: 1px solid #233541;
   }
 
   /* Custom scrollbar */
@@ -75,13 +75,13 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #030712;
+    background: #070D12;
   }
   ::-webkit-scrollbar-thumb {
-    background: #192837;
+    background: #233541;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #00E5FF;
+    background: #00D5E8;
   }
 }
